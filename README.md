@@ -6,7 +6,7 @@ For people who are not familiar with coding, I would suggest starting with [JASP
 
 ![JASP](./Attachments/JASP.png)
 
-This document is intended for students who have a psychology, sociology, or neuroscience background, and who use R as their primary statistical tool. It focuses on the **application** of statistics and programming to your projects, so it is more of a **toolkit**, and you may need to have some knowledge of statistics and programming. Statistical principles and formulas are kept in optional **Under the hood** sections that you can skip.
+This document is intended for students who have a psychology, sociology, or neuroscience background, and who use R as their primary statistical tool; SEM-related modules use lavaan and also include Mplus syntax. It focuses on the **application** of statistics and programming to your projects, so it is more of a **toolkit**, and you may need to have some knowledge of statistics and programming. Statistical principles and formulas are kept in optional **Under the hood** sections that you can skip.
 
 ### Do I need a foundation in programming and statistics?
 
@@ -73,7 +73,8 @@ In the middle and later stages of programming, you will learn mainly by looking 
         - Within-subject designs: paired t-test, repeated-measures ANOVA (sphericity)
         - Post hoc tests and multiple comparisons
     - Under the hood: the general linear model in matrix form (t-test, ANOVA, and regression as special cases)
-    - Parametric & nonparametric tests
+    - Nonparametric tests: overview and lookup table
+        - Under the hood: rank-based tests as linear models on ranks
     - Multivariate analysis of variance (MANOVA)
     - Effect sizes and confidence intervals
     - Power analysis (a priori)
@@ -108,21 +109,24 @@ In the middle and later stages of programming, you will learn mainly by looking 
 
 **This section will include Python.**
 
-- Machine learning
-    - Reinforcement learning
+- Regularized regression (lasso, ridge) and cross-validation
+- Psychological network analysis
+    - Partial correlation networks (Gaussian graphical model, EBICglasso)
+    - Accuracy and stability (bootstrap)
+    - Network comparison between groups
+    - Temporal networks (intensive longitudinal data)
 - Extra
     - FDR control
     - Sensitivity analysis
     - Common method biases
-    - Network analysis
-    - Neural network modeling
 
 ### Structure
 
 - Categories: nonparametric & parametric; cross-sectional & longitudinal; categorical & continuous
 - Statistical method name (Chinese & English)
 - Variable type (the categorization needs to be clear)
-- Package & function
+- Package & function (R; Mplus syntax for SEM-related modules)
+- Nonparametric alternative (for each test module)
 - Comment (your own comments, e.g. the difference between ANOVA and the chi-square test)
 - Resource (URL, textbook, website, etc.)
 - Under the hood (optional): math principles and a hand-coded implementation
