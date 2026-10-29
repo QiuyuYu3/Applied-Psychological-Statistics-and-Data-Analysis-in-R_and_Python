@@ -6,15 +6,15 @@ For people who are not familiar with coding, I would suggest starting with [JASP
 
 ![JASP](./Attachments/JASP.png)
 
-This document is intended for students who have a psychology, sociology, or neuroscience background, and who use R as their primary statistical tool. **It does not go into detail about formulas, code, or statistical principles**; instead, it focuses on the **application** of statistics and programming to your projects. It is more of a **toolkit**. Therefore, you may need to have some knowledge of statistics and programming.
+This document is intended for students who have a psychology, sociology, or neuroscience background, and who use R as their primary statistical tool. It focuses on the **application** of statistics and programming to your projects, so it is more of a **toolkit**, and you may need to have some knowledge of statistics and programming. Statistical principles and formulas are kept in optional **Under the hood** sections that you can skip.
 
 ### Do I need a foundation in programming and statistics?
 
 Yes, you need to have a slight foundation in statistics and programming. But it's okay if you don't have a firm grasp of the statistics: reading through the examples section of this document will help you solidify the knowledge. In the programming section, although I will not walk you through every step, I will list some necessary basic operations and some syntax samples.
 
-### Why don't you explain statistical principles and formulas?
+### Do I need to understand the statistical principles and formulas?
 
-For students who major in social sciences, even if you don't understand statistical principles and mathematical formulas, you can still do data analysis, as long as you know the circumstances under which you should use a statistical method, the specific steps to follow, and how to interpret the results. Although this manual will not contain explanations and discussions of statistical principles and formulas, I still recommend that you learn about them if you have the time, as this will deepen your understanding of statistics.
+Not necessarily. For students who major in social sciences, even if you don't understand statistical principles and mathematical formulas, you can still do data analysis, as long as you know the circumstances under which you should use a statistical method, the specific steps to follow, and how to interpret the results. Still, I recommend that you learn about them if you have the time, as this will deepen your understanding of statistics. That is why some modules include an optional **Under the hood** section: it explains the math behind the method and implements it by hand (for example, with matrix operations), so you can compare the result with the package output and see, for example, that the t-test, ANOVA, and regression are all the same linear model.
 
 ### How do I use this manual?
 
@@ -22,7 +22,7 @@ For example, when you get a set of data, after reviewing the literature, you may
 
 ### What is included in this document?
 
-Each module includes the name of the statistic, the type of variable, an example of the scenario in which it will be used, the packages and functions, useful resources (documentation, web pages, etc.), and a review of the package and the resource.
+Each module includes the name of the statistic, the type of variable, an example of the scenario in which it will be used, the packages and functions, useful resources (documentation, web pages, etc.), and a review of the package and the resource. Some modules also include an optional Under the hood section with the math and a hand-coded implementation.
 
 ### Why don't you give specific code or steps?
 
@@ -59,31 +59,45 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Outliers
 - Questionnaires or cross-sectional research:
     - Reverse items, sum, average
-    - Normality testing: univariate and multivariate normality tests
 - Descriptive statistics: M, SD, frequency, odds
+- Assumption checks
+    - Normality testing: univariate and multivariate normality tests
+    - Homogeneity of variance
+    - Residual diagnostics
 - Basic statistics:
     - Correlation and linear regression
         - Correlation (Pearson, Spearman)
         - Simple linear regression
         - Multiple linear regression, multicollinearity test (VIF)
     - t-test, ANOVA (linear regression), chi-square test, etc.
+        - Within-subject designs: paired t-test, repeated-measures ANOVA (sphericity)
+        - Post hoc tests and multiple comparisons
+    - Under the hood: the general linear model in matrix form (t-test, ANOVA, and regression as special cases)
     - Parametric & nonparametric tests
     - Multivariate analysis of variance (MANOVA)
+    - Effect sizes and confidence intervals
+    - Power analysis (a priori)
 
 ### Junior Graduate Level (Version 2.0)
 
 - Generalized linear model
     - Logistic regression
+    - Ordinal regression
+    - Count models: Poisson, negative binomial
 - SEM
     - CFA & EFA
     - Mediation test, bootstrap
     - Moderation
     - Multiple group comparison
+- Reliability and validity: Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
+- Longitudinal models
     - Longitudinal SEM
+    - Latent growth curve model
+    - Random intercept cross-lagged panel model (RI-CLPM)
+    - Time series analysis
 - Cluster and discriminant analysis: latent profile analysis (LPA), latent class analysis (LCA)
 - Principal component analysis & factor analysis
-- Longitudinal?
-    - Time series analysis
+- Bayesian statistics (introduction)
 - Meta-analysis & systematic review
 - Multilevel modeling (MLM)
 - Control flow and defining functions
@@ -99,7 +113,6 @@ In the middle and later stages of programming, you will learn mainly by looking 
 - Extra
     - FDR control
     - Sensitivity analysis
-    - Power analysis
     - Common method biases
     - Network analysis
     - Neural network modeling
@@ -112,6 +125,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
 - Package & function
 - Comment (your own comments, e.g. the difference between ANOVA and the chi-square test)
 - Resource (URL, textbook, website, etc.)
+- Under the hood (optional): math principles and a hand-coded implementation
 
 ## Reference
 
