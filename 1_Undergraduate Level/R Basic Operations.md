@@ -1,341 +1,461 @@
 # R Basic Operations
 
+## Before You Start
 
-# Before You Start
+1. How do I import and export data? What if I have multiple data files to read?
+2. How do I add or remove a column or row?
+3. How do I convert variables from numeric to factor?
 
-1. How to import and export data? What if I have multiple data want to read?
-2. How to add or remove a column or row?
-3. How to convert variables from numeric to factor?
+## Basic Procedure
 
-# Basic Procedure
+### Import Dataset
 
-## Import Dataset
+From the menu, **File > Import Dataset**:
 
-File - Import Dataset:
+![Import Dataset](../Attachments/Import%20Dataset.png)
 
-![Import Dataset](.\\Attachments\\Import Dataset.png)
+Or from the Environment pane, **Import Dataset**:
 
-Environment - Import dataset:
+![Environment](../Attachments/environment.png)
 
-![Environment](.\\Attachments\\environment.png)
+### Useful Packages: [Tidyverse](https://www.tidyverse.org/)
 
-## Useful Packages - [**Tidyverse**](https://www.tidyverse.org/)
+Tidyverse makes R much less painful. It is a collection of packages with utility functions that we will use a lot for data processing.
 
-Thanks to Tidyverse makes R less painful. Tidyverse is an integrated package of several utility functions that we will be using a lot for data processing.
+- [**readr**](https://readr.tidyverse.org/articles/readr.html): Read and import data based on specific conditions. You can read more in [R for Data Science: Data import](https://r4ds.hadley.nz/data-import).
+- [**dplyr**](https://dplyr.tidyverse.org/articles/dplyr.html): Process rows or columns, for example selecting specific columns or renaming a column.
+- [**tibble**](https://tibble.tidyverse.org/articles/tibble.html): A modern way of creating data frames.
+- [**stringr**](https://stringr.tidyverse.org/articles/stringr.html): Handle character variables (everything you can imagine). For example: calculating the length of a string; adding, removing, and modifying spaces; sorting; counting; case conversion; and detecting, locating, extracting, matching, replacing, and splitting. It is very useful for batch processing variable names in quantitative research.
+- [**purrr**](https://purrr.tidyverse.org/): Mainly provides the `map()` functions, which are more concise and effective than a `for` loop. They are useful when you repeat the same operation many times, but we will leave them for the Statement section.
+- [**forcats**](https://forcats.tidyverse.org/articles/forcats.html): Sort, filter, and combine factors (categorical variables).
 
-- [**reader](https://readr.tidyverse.org/articles/readr.html) :** Read and import data based on specific conditions. You can read more here: [https://r4ds.hadley.nz/data-import](https://r4ds.hadley.nz/data-import)
-- [**dplyr](https://dplyr.tidyverse.org/articles/dplyr.html) :** Specific processing of rows or columns: for example, selecting specific columns, rename the column.
-- [**Tibble](https://tibble.tidyverse.org/articles/tibble.html) :** New way of creating data frame.
-- [**stringr](https://stringr.tidyverse.org/articles/stringr.html) :** Handle character variables (everything you can imagine). For example, calculating the length of a character, adding, removing and modifying spaces to characters, sorting, counting, case conversion, detect, locate, extract, match, replace, and split. It will be very useful when batch processing variable names when doing quantitative research.
-- [**purrr](https://purrr.tidyverse.org/) :** Mainly provide `map()` function, which is more useful and effective than if statement. When you perform multiple repetitive operations it will be useful, but here we will leave it to the Statement section to talk about it.
-- [**forcats](https://forcats.tidyverse.org/articles/forcats.html) :** Sort, filter, combine factors  (discontinuous variable).
+## Summary and Practice
 
-# Summary and Practice
+### Find Path
 
-## Find Path
+#### Find a file path
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Find file path | NA | When you want to import some data files, you can easily get the file path, and then copy the path, then put the path into the read function. | Run it and it can give you the path.
-`file.choose()`
+- **When to use:** You want to import a data file. `file.choose()` opens a file browser and gives you the path, which you can copy into a read function.
+- **Functions:**
+  - Run it and it gives you the path: `file.choose()`
+  - Combine them together: `read_sav(file.choose())`
+- **Comment:** Use `/` instead of `\` when you type a path by hand.
+- **Resources:** [RDocumentation: file.choose](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/file.choose)
 
-Combine them together!
-`read_sav(file.choose())` | use `/` instead of  `\` when you input the path | https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/file.choose |
-| Get the path of a file | NA | When you want to know where a certain file is and you only have the name of the file. | here package:
-`here("file name")` | You can put any file name into it, it is amazing. | [https://here.r-lib.org/articles/here.html](https://here.r-lib.org/articles/here.html) |
-| Get or set working directory | NA | It is where you read or set files. | `setwd()`
-`getwd()` | This can be very useful when you combine statements, such as reading multiple files. | [https://www.r-bloggers.com/2021/12/get-and-set-working-directory-setwd-getwd-in-r/](https://www.r-bloggers.com/2021/12/get-and-set-working-directory-setwd-getwd-in-r/) |
+#### Build a file path with here
 
-## Import and Export Dataset
+- **When to use:** You know a file's name and where it sits inside your project folder, and want a path that works on any computer.
+- **Functions:** here package: `here("data", "file.csv")`
+- **Comment:** `here()` does not search for the file. It joins your project root (the folder with your `.Rproj` file) with the names you give it, so the same script runs on any computer without changing paths.
+- **Resources:** [here: Introduction](https://here.r-lib.org/articles/here.html)
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Import dataset | NA | Read data (or multiple datasets), data with remote path, specific columns, etc. | haven package: `read_sav()`
+#### Get or set the working directory
 
-Basic R:
-`read.csv()`
+- **When to use:** The working directory is where R reads and saves files by default.
+- **Functions:** `getwd()`, `setwd()`
+- **Comment:** This is very useful when you combine it with statements, such as reading multiple files.
+- **Resources:** [R-bloggers: Get and set working directory (setwd / getwd) in R](https://www.r-bloggers.com/2021/12/get-and-set-working-directory-setwd-getwd-in-r/)
 
-tidyverse package:
-`read_csv()`
-If you want to specify the variable type:
-`col_` | I would recommend you import a csv file instead of sav to avoid possible errors. Haven package will read labels and can cause issues.
+### Import and Export Dataset
 
-`read_csv()` is faster and defaults to not converting strings to factors automatically. It also gives you many ways to read specific files. | https://haven.tidyverse.org/reference/read_spss.html
+#### Import a dataset
 
-https://readr.tidyverse.org/reference/read_delim.html
+- **When to use:** Read data (or multiple datasets), data from a remote path, specific columns, etc.
+- **Functions:**
+  - haven package: `read_sav()`
+  - Base R: `read.csv()`
+  - readr package: `read_csv()`; to specify variable types, use the `col_*()` functions, e.g. `read_csv("data.csv", col_types = cols(ID = col_character()))`
+- **Comment:** I recommend importing a csv file instead of a sav file to avoid possible errors: haven reads the SPSS labels, which can cause issues. `read_csv()` is faster and does not convert strings to factors. It also gives you many ways to read specific files.
+- **Resources:** [haven: read_spss](https://haven.tidyverse.org/reference/read_spss.html), [readr: read_delim](https://readr.tidyverse.org/reference/read_delim.html), [R for Data Science: Data import](https://r4ds.hadley.nz/data-import)
 
-https://r4ds.hadley.nz/data-import
- |
-| Read multiple datasets | NA | Read and vertically merge datasets into a dataframe with the name of the first column as ‘Name’. If you want to keep it in the environment, remember to create the object. | tidyverse package:
-`data <- read_csv(c("A.csv", "B.csv"), id = "Name")`
+#### Read multiple datasets
 
-`lapply()` or `for` loop
+- **When to use:** Read several files and stack them vertically into one data frame, with the file name stored in a first column called `Name`. If you want to keep the result in the environment, remember to assign it to an object.
+- **Functions:**
+  - readr package: `data <- read_csv(c("A.csv", "B.csv"), id = "Name")`
+  - Base R: `lapply()` or a `for` loop (see [Syntax Sample](#syntax-sample))
+  - purrr package: `combined_data <- map_dfr(c("A.csv", "B.csv"), ~ read_csv(.x) %>% mutate(file = .x))`
+- **Comment:** I don't suggest `lapply()` or `for` statements if you are a beginner. Their logic is to go through the whole folder, reading each path and file name in turn.
+- **Resources:** [Stack Overflow: Add filename column to table as multiple files are read and bound](https://stackoverflow.com/questions/46299777/add-filename-column-to-table-as-multiple-files-are-read-and-bound)
 
-purrr package: 
-`map_dfr`
-`combined_data < - map_dfr(c("A.csv", "B.csv"), ~ read_csv(.x) %>% mutate(file = .x))` | I don’t suggest use `lapply()` or `for` statements if you are a new beginner. But here I will tell you its logic is to traverse the whole folder to read the path and filename using the statement.
+#### Export data
 
- | [https://stackoverflow.com/questions/46299777/add-filename-column-to-table-as-multiple-files-are-read-and-bound](https://stackoverflow.com/questions/46299777/add-filename-column-to-table-as-multiple-files-are-read-and-bound)
+- **Variable types:** All
+- **When to use:** Export your data. Here I only list csv files, but you can also export an Excel file with the writexl package: `library(writexl)`, then `write_xlsx(df, "data.xlsx")`.
+- **Functions:**
+  - Base R: `write.csv(data, file = "data.csv", row.names = FALSE)`
+  - readr package: `write_csv(data, "data.csv")`
+- **Comment:** As with importing, you have a number of options when you export (check the function documentation for details). `write_csv()` runs fast.
+- **Resources:** [rdrr.io: write.table](https://rdrr.io/r/utils/write.table.html), [readr: write_delim](https://readr.tidyverse.org/reference/write_delim.html)
 
- |
-| Export data | All | Export different kinds of data, here I only list csv files. But you can use `library(writexl)
-write_xlsx(df, "data.xlsx")` to export Excel file. | `write.csv(data, file = "data.csv", row.names = FALSE)`
+### Convert Variable Types
 
-library(readr)
-`write_csv(data, "data.csv")` | Like when you import data, you have a number of options to choose from when you export (check the function documentation for details). `write_csv` runs fast. | [https://rdrr.io/r/utils/write.table.html](https://rdrr.io/r/utils/write.table.html)
+#### Check data types
 
-[https://readr.tidyverse.org/reference/write_delim.html](https://readr.tidyverse.org/reference/write_delim.html)
- |
+- **Variable types:** All
+- **When to use:** You want to see each variable's data type and decide whether to convert it.
+- **Functions:** `str()`
+- **Comment:** `str()` shows the type of a list, object, vector, or column.
+- **Resources:** [Statology: How to use str() function in R](https://www.statology.org/str-function-in-r/)
 
-## Convert Different Variables Types
+#### Convert to numeric
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Check datatypes | All | When you want to see the variable data type and consider whether to convert the variable type. | `str()`
- | You can use `str()`  to check variable type in list, object, vector, or column.  | [https://www.statology.org/str-function-in-r/](https://www.statology.org/str-function-in-r/) |
-| Convert to numeric | All | Create dummy variables, or convert factors to numbers after importing a csv file. | `as.numeric(x, …)`
- | When you use the `as.numeric` to convert factors, R returns the internal integer index of the factor, not the level of the factor itself. | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/numeric](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/numeric)
+- **Variable types:** All
+- **When to use:** Create dummy variables, or convert factors to numbers after importing a csv file.
+- **Functions:** `as.numeric(x, ...)`
+- **Comment:** When you use `as.numeric()` on a factor, R returns the internal integer code of each level, not the level itself. Use `as.numeric(as.character(x))` instead (see [Syntax Sample](#syntax-sample)).
+- **Resources:** [RDocumentation: numeric](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/numeric), [Data Wrangling Recipes in R: Numeric/integer variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chNumeric.html)
+
+#### Convert to character
+
+- **Variable types:** All
+- **When to use:** Convert numbers or logical values into text, e.g. participant IDs that should be treated as labels rather than numbers.
+- **Functions:** `as.character()`
+- **Resources:** [RDocumentation: character](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/character)
+
+#### Convert to logical
+
+- **Variable types:** All
+- **When to use:** Convert numbers into `TRUE`/`FALSE`: 0 becomes `FALSE` and any non-zero number becomes `TRUE`. In the other direction, `as.numeric()` turns `TRUE` into 1 and `FALSE` into 0.
+- **Functions:** `as.logical()`
+- **Resources:** [RDocumentation: logical](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/logical), [Data Wrangling Recipes in R: Logical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chLogical.html)
+
+#### Convert to factor
+
+- **Variable types:** All
+- **When to use:** Display levels instead of numbers in the value column.
+- **Functions:** `as.factor()`
+- **Resources:** [RDocumentation: factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor), [Data Wrangling Recipes in R: Factor/categorical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chFacts.html)
+
+#### Convert to date
+
+- **Variable types:** All
+- **When to use:** Convert a string of numbers or characters into a date or time.
+- **Functions:** `as.Date()`, `format()`, `as.POSIXct()`, `as.POSIXlt()`
+- **Resources:** [Data Wrangling Recipes in R: Date/time variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chDate.html), [Stat2Labs: Introduction to working with dates in R](https://www.stat2labs.sites.grinnell.edu/Handouts/rtutorials/IntroDates.html)
+
+#### Convert a character vector into a more specific type
+
+- **Variable types:** All
+- **When to use:** You want to convert a character variable to the appropriate type (date, factor, logical, double, integer, etc.).
+- **Functions:** readr package: the `parse_*()` functions, e.g. `parse_number()`, `parse_date()`
+- **Comment:** These functions are very useful in data cleaning, as long as your data follows a specific pattern. `parse_number()` extracts the number from a string that contains non-numeric characters.
+- **Resources:** [readr: Introduction](https://readr.tidyverse.org/articles/readr.html)
+
+### Subset Selection and Modification
+
+#### Remove rows
+
+- **Variable types:** All
+- **When to use:** You no longer need one participant's data.
+- **Functions:**
+  - Remove the second row: `data[-2, ]`
+  - Base R: `subset()`
+  - dplyr package: `filter()`
+- **Comment:** `-` and `!` mean "delete". Inside `data[rows, columns]`, the `,` separates rows from columns, and leaving one side empty means all rows or all columns.
+- **Resources:** [FavTutor: Remove row in R](https://favtutor.com/blogs/remove-row-in-r), [Displayr: How to remove a row or column from a table using R](https://help.displayr.com/hc/en-us/articles/360003863576-How-to-Remove-a-Row-or-Column-from-a-Table-Using-R)
+
+#### Remove columns (variables)
+
+- **Variable types:** All
+- **When to use:** You no longer need a column.
+- **Functions:**
+  - By name: `data[, !names(data) %in% "variable"]`
+  - Remove the first column: `data[, -1]`
+  - Base R: `subset()`
+  - dplyr package: `select(-variable)`
+- **Comment:** As with rows, `-` and `!` mean "delete", and leaving one side of the `,` empty means all rows or all columns.
+- **Resources:** [ListenData: Select or remove columns from data frame](https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html), [Spark By Examples: How to remove column in R](https://sparkbyexamples.com/r-programming/remove-column-in-r/)
+
+#### Subset selection
+
+- **Variable types:** All
+- **When to use:** Select part of the raw data frame.
+- **Functions:**
+  - Base R: `subset()`
+  - Remove the second row and the first column: `data[-2, -1]`
+- **Comment:** You can take subsets of vectors, matrices, data frames, and lists, but selecting rows and columns of data frames is what we do most. Mastering `filter()` and `select()` is enough.
+- **Resources:** [Stack Overflow: How to subset rows and columns in R](https://stackoverflow.com/questions/65650497/how-to-subset-rows-and-columns-in-r), [RDocumentation: subset](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/subset), [Advanced R: Subsetting](https://adv-r.hadley.nz/subsetting.html)
 
-[https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chNumeric.html](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chNumeric.html) |
-| Convert to Characters | All | Convert logical variables into characters, display ‘Yes’ and ‘No’ instead of numbers. | `as.character()` |  | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/character](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/character) |
-| Convert to Logical | All | TRUE is converted to 1, FALSE is converted to 0; 0 is converted to FALSE, non-0 is converted to TRUE. | `as.logical()` |  | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/logical](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/logical)
+#### Add, modify, or delete columns
+
+- **When to use:** Add two columns holding the mean and the z-score. You can also delete a column by setting it to `NULL`.
+- **Functions:** dplyr package: `mutate(data, new_column = ...)`
+- **Comment:** You can add several columns in one `mutate()` call, and a new column can be a vector, the result of a function, or a single value. `mutate()` is useful together with statements or other functions.
+- **Resources:** [dplyr: mutate](https://dplyr.tidyverse.org/reference/mutate.html)
 
-[https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chLogical.html](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chLogical.html) |
-| Covert to Factors | All | Display levels instead of numbers on the value column. | `as.factor()` |  | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor)
-
-[https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chFacts.html](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chFacts.html) |
-| Convert to Date | All | Convert a string of numbers or characters into a time. | `as.Date()`
-`format()`
-`as.POSIXct()`
-`as.POSIXlt()` |  | [https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chDate.html](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chDate.html)
-
-[https://www.stat2labs.sites.grinnell.edu/Handouts/rtutorials/IntroDates.html](https://www.stat2labs.sites.grinnell.edu/Handouts/rtutorials/IntroDates.html) |
-| Convert a character vector into a more specific type | All | When you want to convert a character variable to the appropriate type (date, factor, logical, double, inter, etc.) | reader package:
-`parse_` | This function can be very useful when doing data cleaning, as long as your data format follows a specific pattern. 
-`parse_number()` can extract the numeric part from a string containing non-numeric characters. | [https://readr.tidyverse.org/articles/readr.html](https://readr.tidyverse.org/articles/readr.html)
-
- |
-
-## Subset Selection and Modification
-
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Remove lines | All | No longer need one of the participants’ data. | remove the second line:
-`data[-2, ]`
-
-`subset()`
-
-dplyr package:
-`filter()` | `-` and `!` mean “delete”
-`’` represents all lines or columns, sometimes it can represent data frame. | [https://favtutor.com/blogs/remove-row-in-r](https://favtutor.com/blogs/remove-row-in-r)
-
-[https://help.displayr.com/hc/en-us/articles/360003863576-How-to-Remove-a-Row-or-Column-from-a-Table-Using-R](https://help.displayr.com/hc/en-us/articles/360003863576-How-to-Remove-a-Row-or-Column-from-a-Table-Using-R) |
-| Remove columns (variables) | All | No longer need one column. | `data[, !names(data) %in% "variable"]`
-remove the first column:
-`data[, -1]`
-
-`subset()`
-
-dplyr package:
-`select(-variable)` | `-` and `!` mean “delete”
-`’` represents all lines or columns, sometimes it can represent data frame. | [https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html](https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html)
-
-[https://sparkbyexamples.com/r-programming/remove-column-in-r/](https://sparkbyexamples.com/r-programming/remove-column-in-r/) |
-| Subset Selection | All | Select a portion of the data frame from the raw data frame. | `subset()`
-
-remove the second line and first column
-`data[-2, -1]` | In fact, you can pick subsets from vectors, matrices, dataframes, lists. But we use selecting rows and columns (dataframes), the most. Master the `filter` and `select` is enough. | [https://stackoverflow.com/questions/65650497/how-to-subset-rows-and-columns-in-r](https://stackoverflow.com/questions/65650497/how-to-subset-rows-and-columns-in-r)
-
-[https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/subset](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/subset)
-
-[https://adv-r.hadley.nz/subsetting.html](https://adv-r.hadley.nz/subsetting.html) |
-| Add new columns, or delete, or maybe just modify the old column | NA | Add two columns of values representing the mean and z-score.
-
-You can also delete columns by setting their value to NULL. | tidyverse package:
-`mutate(data, name = c())` | You can add couple columns by using `mutate()`,and the new column can be list, object, function, or value.
-`mutate()` is useful in conjunction with statements or other functions. | [https://dplyr.tidyverse.org/reference/mutate.html](https://dplyr.tidyverse.org/reference/mutate.html)
- |
-| Select specific columns |  | The `select` function can be combined with other functions or even statements or conditions to help you filter the columns you want. | `select()`
- | By combining other conditions, you can also choose variables based on the pattern of variable naming, such as choosing variables whose first several characters are letters. | [https://dplyr.tidyverse.org/reference/select.html](https://dplyr.tidyverse.org/reference/select.html) |
-| Conditions | All | Extract the variable sthat start with “A” and ends with “C” and contains “b” | `stars_with()`
-`ends_with()`
-`contains()`
-`everything()`
-`gsub("[^A-Za-z]+.*", "", colnames(df))` | These conditions can be combined, by  using `&`,  `|` , `!` , etc. | [https://dplyr.tidyverse.org/reference/select.html](https://dplyr.tidyverse.org/reference/select.html) |
-| Select specific lines | All | Chooses rows based on column values, or split the data frame. | `filter()`
-
-Index rows by their (integer) locations:
-`slice()` | `filter()` role is similar to `==`.
-`slice()` can't delete or replace rows directly, but you can do it by generating a new dataframe (selecting the rows you want and creating objects). `slice()` is more focused on position, while `filter()` is more focused on content (conditions). | [https://dplyr.tidyverse.org/reference/filter.html](https://dplyr.tidyverse.org/reference/filter.html)
-
-[https://dplyr.tidyverse.org/reference/slice.html](https://dplyr.tidyverse.org/reference/slice.html) |
-| Keep only unique/distinct rows | All | When you only want unique participant data (eliminating duplicates), or looking at outliers. | `distinct()`
-`unique()` | This two functions will be very useful when you are doing the data cleaning, especially `unique()`, you can combine with loop statement. | [https://dplyr.tidyverse.org/reference/distinct.html](https://dplyr.tidyverse.org/reference/distinct.html)
-
-[https://rdrr.io/r/base/unique.html](https://rdrr.io/r/base/unique.html) |
-| Extract specific variable or column | All | Selecting only specific variables or columns instead of the entire data frame. | `data$'Variabel.1'`
-or `data$Variabel`
-
-dplyr package:
-`pull()` | Be very careful about how you name the variable - do not use `.` because R may think this is a function or statement. If you insist using it, quote the variable. | [https://dplyr.tidyverse.org/reference/pull.html](https://dplyr.tidyverse.org/reference/pull.html) |
-
-## Data Frames and Essential R Studio Operations
+#### Select specific columns
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Create object | NA |  |  `<-` | Try to get into the good habit of creating objects to store in the environment for every step of processing at the beginning. |  |
-| Display object | NA | When you want to see your results, data, list, etc. | `print()`
-`Object` (replace the object you want to see, eg. data) | Unlike Python, R can be run line by line, and you can select only ‘objects’ to run to see their contents. |  |
-| List all the variables | All | Know what variables your data frame contains. | `names(data)`
-`colnames(data)`
-`str(data)`
-`ls(data)`
+- **When to use:** `select()` can be combined with other functions, statements, or conditions to pick the columns you want.
+- **Functions:** `select()`
+- **Comment:** Combined with other conditions, you can also choose variables by naming pattern, such as variables whose names start with certain letters.
+- **Resources:** [dplyr: select](https://dplyr.tidyverse.org/reference/select.html)
 
-dplyr package:
-`glimpse(data)` |  | [https://dplyr.tidyverse.org/reference/glimpse.html](https://dplyr.tidyverse.org/reference/glimpse.html) |
-| Save space in your code - Pipe an object forward into a function or call expression | NA | When performing multi-step operations, objects can be passed to the next function to make the syntax concise. | tidyverse package:
-`%>%` | The shortcut keys are `Control + Shift + M`
-You will use it very often. | [https://magrittr.tidyverse.org/reference/pipe.html](https://magrittr.tidyverse.org/reference/pipe.html)
+#### Select columns by name pattern
 
-[https://github.com/arthurwelle/VIS/blob/master/Pipe_Cake/Pipe_baking.gif](https://github.com/arthurwelle/VIS/blob/master/Pipe_Cake/Pipe_baking.gif) |
-| Check R version or cite R | NA | When you want to cite R in your paper. | `RStudio.Version()` |  | [https://support.posit.co/hc/en-us/articles/206212048-Citing-RStudio](https://support.posit.co/hc/en-us/articles/206212048-Citing-RStudio) |
-| Save R Objects | NA | Use it when you want to save the entire current working environment so that you can revert to the same state later. | `save()`
-`save.image()` |  | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/save](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/save) |
-| Clean the environment | NA | When your storage is not enough, or you no longer need this environment. | Clean all environment:
-`rm(list = ls())` | Use `rm(list = ls())` carefully.
-You can also click the broom icon at the top of the Environment pane. |  |
-| List or remove the object | NA |  | remove one object
-`rm()`
+- **Variable types:** All
+- **When to use:** Extract the variables that start with "A", end with "C", and contain "b".
+- **Functions:**
+  - dplyr package: `starts_with()`, `ends_with()`, `contains()`, `everything()`
+  - Base R, keep only the leading letters of each column name: `gsub("[^A-Za-z]+.*", "", colnames(df))`
+- **Comment:** These conditions can be combined with `&`, `|`, `!`, etc.
+- **Resources:** [dplyr: select](https://dplyr.tidyverse.org/reference/select.html)
 
-list objects
-`ls()` |  |  |
-| Reduce function calls | All | Merge multiple dataframes, or reduce function writing and calling. | `do.call()` | do.call() is a very useful function in R. Its main purpose is to call other functions dynamically and pass a list of arguments to those functions. | [https://stackoverflow.com/questions/10801750/whats-the-difference-between-lapply-and-do-call](https://stackoverflow.com/questions/10801750/whats-the-difference-between-lapply-and-do-call)
+#### Select specific rows
+
+- **Variable types:** All
+- **When to use:** Choose rows based on column values, or split the data frame.
+- **Functions:**
+  - dplyr package: `filter()`
+  - Index rows by their (integer) positions: `slice()`
+- **Comment:** `filter()` keeps the rows that meet a condition written with `==`, `>`, etc. `slice()` can't delete or replace rows directly, but you can do it by selecting the rows you want and saving them as a new data frame. `slice()` works by position, while `filter()` works by content (conditions).
+- **Resources:** [dplyr: filter](https://dplyr.tidyverse.org/reference/filter.html), [dplyr: slice](https://dplyr.tidyverse.org/reference/slice.html)
+
+#### Keep only unique/distinct rows
 
-[https://www.spsanderson.com/steveondata/posts/2023-06-01/index.html](https://www.spsanderson.com/steveondata/posts/2023-06-01/index.html) |
-| Another type of data frame | All | Better view and usage of the data frame. | tibble package: 
-`tibble()`
+- **Variable types:** All
+- **When to use:** You only want unique participant data (removing duplicates), or you are looking for outliers.
+- **Functions:** `distinct()`, `unique()`
+- **Comment:** These two functions are very useful in data cleaning, especially `unique()`, which you can combine with a loop.
+- **Resources:** [dplyr: distinct](https://dplyr.tidyverse.org/reference/distinct.html), [rdrr.io: unique](https://rdrr.io/r/base/unique.html)
+
+#### Extract a specific variable or column
+
+- **Variable types:** All
+- **When to use:** You want only one variable (column) instead of the entire data frame.
+- **Functions:**
+  - Base R: `data$Variable`, or `` data$`Variable 1` `` if the name contains a space
+  - dplyr package: `pull()`
+- **Comment:** Be careful how you name variables: avoid spaces and special characters such as `-`. If a name has them, wrap it in backticks.
+- **Resources:** [dplyr: pull](https://dplyr.tidyverse.org/reference/pull.html)
 
-Coerce objects into tibbles:
-`as_tibble()` | `tibble` does not support row names, and encourages the usage of column names as unique identifiers, it provides better printing and display features. | [https://tibble.tidyverse.org/reference/tibble.html](https://tibble.tidyverse.org/reference/tibble.html) |
-| Reorder columns or variables | All | Put the participant's ID in the first column. | dylr package:
-`relocate()`
-`select()` | `relocate()` is cleaner and simpler, it doesn't change the structure of the data.
-`select()` has more functionality. | [https://dplyr.tidyverse.org/reference/relocate.html](https://dplyr.tidyverse.org/reference/relocate.html)
+### Data Frames and Essential RStudio Operations
+
+#### Create an object
+
+- **Functions:** `<-`
+- **Comment:** From the start, get into the good habit of saving the result of every processing step as an object in the environment.
 
-[https://dplyr.tidyverse.org/reference/select.html](https://dplyr.tidyverse.org/reference/select.html) |
-| Reorder rows | Continuous | Ascending or descending order of the rows in the data frame based on the value of the column(s). | Basic R:
-`sort()`
+#### Display an object
+
+- **When to use:** You want to see your results, data, list, etc.
+- **Functions:** `print()`, or just run the object's name (e.g. `data`)
+- **Comment:** In RStudio you can run code line by line, and you can select just an object's name and run it to see its contents.
+
+#### List all the variables
 
-dylr package:
-`arrange()`
+- **Variable types:** All
+- **When to use:** Find out what variables your data frame contains.
+- **Functions:**
+  - Base R: `names(data)`, `colnames(data)`, `str(data)`, `ls(data)`
+  - dplyr package: `glimpse(data)`
+- **Resources:** [dplyr: glimpse](https://dplyr.tidyverse.org/reference/glimpse.html)
+
+#### Pipe an object forward into a function
 
-descending order:
-`desc()` | `sort ()` can only fulfill for one condition, while the `range ()` can meet more than one condition, such as the age of the ascending order and then depression level in descending order. | [https://rdrr.io/r/base/sort.html](https://rdrr.io/r/base/sort.html)
+- **When to use:** In multi-step operations, pass the result of one step to the next function to keep the syntax concise.
+- **Functions:** magrittr package (loaded with tidyverse): `%>%`
+- **Comment:** The shortcut is `Ctrl + Shift + M` (`Cmd + Shift + M` on Mac). You will use it very often.
+- **Resources:** [magrittr: pipe](https://magrittr.tidyverse.org/reference/pipe.html), [Pipe baking animation (GIF)](https://github.com/arthurwelle/VIS/blob/master/Pipe_Cake/Pipe_baking.gif)
+
+#### Check the R version or cite R
 
-[https://dplyr.tidyverse.org/reference/arrange.html](https://dplyr.tidyverse.org/reference/arrange.html)
+- **When to use:** You want to cite R or RStudio in your paper.
+- **Functions:**
+  - Citation for R: `citation()`
+  - R version: `R.version.string`
+  - RStudio version: `RStudio.Version()`
+- **Resources:** [Posit Support: Citing RStudio](https://support.posit.co/hc/en-us/articles/206212048-Citing-RStudio)
+
+#### Save R objects
 
-[https://dplyr.tidyverse.org/reference/desc.html](https://dplyr.tidyverse.org/reference/desc.html) |
+- **When to use:** Save objects, or the whole working environment, so that you can return to the same state later.
+- **Functions:** `save()`, `save.image()`
+- **Resources:** [RDocumentation: save](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/save)
 
-## Data Clean Preparation
+#### Clean the environment
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Detect, locate, extract, match, replace, and split characters | Character Variables | Calls the name of a variable with the same first three letters; replaces specific letters. | stringr package:`str_grep()grepl()` , `sub()`,  `gsub()` provides other forms of extract or detect characters. | processing of characters is a big topic -  learning the functions when you are actually cleaning or processing the data. Current programming languages are very fleciable of handling characters: ‘don't handle them manually if you can’, instead, use statements or scripts. | [https://stringr.tidyverse.org/articles/stringr.html](https://stringr.tidyverse.org/articles/stringr.html)[https://rdrr.io/r/base/grep.html](https://rdrr.io/r/base/grep.html)[https://bookdown.org/rdpeng/rprogdatascience/regular-expressions.html](https://bookdown.org/rdpeng/rprogdatascience/regular-expressions.html)[https://r4ds.had.co.nz/strings.html](https://r4ds.had.co.nz/strings.html) |
-| Sort, Filter, Combine Factors | Dichotomous Variables | When you are not satisfied with the ordering of levels or factors - drawing a figure, and you want the frequencies to be ordered from largest to smallest; or when you are doing a logistic regression you want a factor to be the reference group. | `fct_()` |  | [https://forcats.tidyverse.org/articles/forcats.html](https://forcats.tidyverse.org/articles/forcats.html)
+- **When to use:** Your memory is running low, or you no longer need the objects in the environment.
+- **Functions:** Remove everything: `rm(list = ls())`
+- **Comment:** Use `rm(list = ls())` carefully. You can also click the broom icon at the top of the Environment pane.
 
-[https://r4ds.had.co.nz/factors.html](https://r4ds.had.co.nz/factors.html)
+#### List or remove objects
 
-[https://r02pro.github.io/factor.html](https://r02pro.github.io/factor.html) |
-| Check your data | NA | Check that data entry and import are correct. | `summary()` 
+- **Functions:**
+  - Remove one object: `rm()`
+  - List objects: `ls()`
 
-dplyr package:
-`slice()`
-randomly selects rows:
-`slice_sample()`
+#### Reduce function calls with do.call()
 
-Select the first few lines or the last few lines:
-`head()`
-`tail()` | `summary()` can let you read detailed information about each variable, including minimum, 1quartile, median, mean, 3 quartiles, and maximum values (numeric); frequencies for each factor level.
+- **Variable types:** All
+- **When to use:** Merge multiple data frames, or avoid writing out the same function call many times.
+- **Functions:** `do.call()`
+- **Comment:** `do.call()` calls another function dynamically and passes it a list of arguments, e.g. `do.call(rbind, data_list)` stacks every data frame in a list.
+- **Resources:** [Stack Overflow: What's the difference between lapply and do.call?](https://stackoverflow.com/questions/10801750/whats-the-difference-between-lapply-and-do-call), [Steve's Data Tips and Tricks: The do.call() function in R](https://www.spsanderson.com/steveondata/posts/2023-06-01/index.html)
 
-`slice()` `head()` `tail()` can let you see the raw data directly. | [https://dplyr.tidyverse.org/reference/slice.html](https://dplyr.tidyverse.org/reference/slice.html) |
-| Rename variables or columns | All | Change variable name from “CTQ” to “ACTQ” | `rename()` |  | [https://dplyr.tidyverse.org/reference/rename.html](https://dplyr.tidyverse.org/reference/rename.html) |
-| data format: from wide to long, or long to wide | All | Typically our columns would be by ‘ID, Variable 1, Variable 2 ....’ but sometimes we need the column names to be sorted by ID or merged with multiple variables (e.g. figure). | Pivot data from long to wide:
-`pivot_wider()`
+#### Another type of data frame: tibble
 
-Pivot data from wide to long:
-`pivot_longer()`
- |  | [https://tidyr.tidyverse.org/reference/pivot_wider.html](https://tidyr.tidyverse.org/reference/pivot_wider.html)
+- **Variable types:** All
+- **When to use:** You want a data frame that prints and behaves more nicely.
+- **Functions:**
+  - tibble package: `tibble()`
+  - Coerce objects into tibbles: `as_tibble()`
+- **Comment:** A tibble does not support row names and encourages using columns as unique identifiers. It also prints and displays better.
+- **Resources:** [tibble: tibble](https://tibble.tidyverse.org/reference/tibble.html)
 
-[https://tidyr.tidyverse.org/reference/pivot_longer.html](https://tidyr.tidyverse.org/reference/pivot_longer.html) |
+#### Reorder columns
 
-### Combination of the Dataframes, Rows, and Columns
+- **Variable types:** All
+- **When to use:** Put the participant ID in the first column.
+- **Functions:** dplyr package: `relocate()`, `select()`
+- **Comment:** `relocate()` is cleaner and simpler, and it doesn't change the structure of the data. `select()` has more functionality.
+- **Resources:** [dplyr: relocate](https://dplyr.tidyverse.org/reference/relocate.html), [dplyr: select](https://dplyr.tidyverse.org/reference/select.html)
 
-| **Name** | **Variables Types** | **Conditions & Examples** | **Package & Function** | **Comment** | **Resource** |
-| --- | --- | --- | --- | --- | --- |
-| Merging multiple dataframes (rows) horizontally | All | Add more participants’ data into the raw data frame. | `bind_rows()`
+#### Reorder rows
 
-`rbind()`
+- **Variable types:** Continuous
+- **When to use:** Sort the rows of the data frame in ascending or descending order of one or more columns.
+- **Functions:**
+  - Base R: `data[order(data$age), ]`; `sort()` sorts a single vector
+  - dplyr package: `arrange()`; descending order: `desc()`
+- **Comment:** `sort()` handles only one vector, while `arrange()` reorders the rows of a data frame and accepts several conditions, e.g. age in ascending order and then depression level in descending order: `arrange(data, age, desc(depression))`.
+- **Resources:** [rdrr.io: order](https://rdrr.io/r/base/order.html), [rdrr.io: sort](https://rdrr.io/r/base/sort.html), [dplyr: arrange](https://dplyr.tidyverse.org/reference/arrange.html), [dplyr: desc](https://dplyr.tidyverse.org/reference/desc.html)
 
- |  | [https://dplyr.tidyverse.org/reference/bind_rows.html](https://dplyr.tidyverse.org/reference/bind_rows.html) |
-| Merging multiple dataframes, vertically | All |  Add more columns or variables. | `bind_cols()`
+### Data Cleaning Preparation
 
-`cbind()` |  | [https://dplyr.tidyverse.org/reference/bind_cols.html](https://dplyr.tidyverse.org/reference/bind_cols.html) |
-| Merge data frame left and right (partially) | All | Add more variable values into the raw data frame. If you have data1 and data2 with overlapping (or consistent) IDs, you can take the two sets and merge the remaining columns based on the ID columns of data1 or data2 as a baseline. | dplyr package:
-`right_join(data1, data2, by = "ID)`
-`left_join(data1, data2, by = "ID")` | Notably, When the reference columns (IDs) do not match, left or right will determine which reference column you have. If data1 has an ID of ‘1,2,3,4’ and data2 is ‘1,2,3,5’ and you use `left_join`, the final data frame will only keep the data from ‘1,2,3,4’ and the corresponding values of the other variables will be NA. | [https://dplyr.tidyverse.org/reference/mutate-joins.html](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+#### Detect, locate, extract, match, replace, and split characters
 
-[https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join)
+- **Variable types:** Character
+- **When to use:** Pick the variables whose names share the same first three letters; replace specific letters.
+- **Functions:**
+  - stringr package: `str_detect()`, `str_extract()`, `str_replace()`, `str_split()`
+  - Base R: `grep()`, `grepl()`, `sub()`, `gsub()`
+- **Comment:** Processing characters is a big topic, so learn the functions when you actually clean or process data. Modern programming languages are very flexible at handling characters: don't handle them manually if you can; use statements or scripts instead.
+- **Resources:** [stringr: Introduction](https://stringr.tidyverse.org/articles/stringr.html), [rdrr.io: grep](https://rdrr.io/r/base/grep.html), [R Programming for Data Science: Regular expressions](https://bookdown.org/rdpeng/rprogdatascience/regular-expressions.html), [R for Data Science (1st edition): Strings](https://r4ds.had.co.nz/strings.html)
 
-[https://r4ds.hadley.nz/joins](https://r4ds.hadley.nz/joins)
+#### Sort, filter, and combine factors
 
- |
-| Merge all data in different data frames | All | You want all data or values from all datasets and don’t want to drop anything. It means final combined dataframe will have data of ‘ID = 1,2,3,4,5’. | `full_join()` | This function keeps all data, and ensures that the entry is complete and that the missing information is NA.
- | [https://dplyr.tidyverse.org/reference/mutate-joins.html](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+- **Variable types:** Categorical
+- **When to use:** You are not satisfied with the order of factor levels: e.g. in a figure you want the frequencies ordered from largest to smallest, or in a logistic regression you want a specific level as the reference group.
+- **Functions:** forcats package: the `fct_*()` functions, e.g. `fct_infreq()` (order by frequency) and `fct_relevel()` (set the reference level)
+- **Resources:** [forcats: Introduction](https://forcats.tidyverse.org/articles/forcats.html), [R for Data Science (1st edition): Factors](https://r4ds.had.co.nz/factors.html), [R Programming: Zero to Pro: Character vectors, factors & ordered factors](https://r02pro.github.io/factors.html)
 
-[https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join)
+#### Check your data
 
-[https://r4ds.hadley.nz/joins](https://r4ds.hadley.nz/joins) |
-| Merge two datasets but only keep the overlapping rows | All | You want data on participants with the same ID in both datasets.
-It means final combined dataframe will have data of ‘ID = 1,2,3’. | `inner_join()` | Only keep the same observations from the reference column. | [https://dplyr.tidyverse.org/reference/mutate-joins.html](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+- **When to use:** Check that data entry and import are correct.
+- **Functions:**
+  - Base R: `summary()`
+  - dplyr package: `slice()`; randomly select rows: `slice_sample()`
+  - First or last few rows: `head()`, `tail()`
+- **Comment:** `summary()` gives detailed information about each variable: minimum, first quartile, median, mean, third quartile, and maximum for numeric variables, and frequencies for each factor level. `slice()`, `head()`, and `tail()` let you look at the raw data directly.
+- **Resources:** [dplyr: slice](https://dplyr.tidyverse.org/reference/slice.html)
 
-[https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join)
+#### Rename variables
 
-[https://r4ds.hadley.nz/joins](https://r4ds.hadley.nz/joins) |
-| Take one data frame as a reference and retain or drop all rows whose name matches the reference | All | Your two dataframes have different columns, now you will only have the columns of data1 and will not add columns from data2 (reference), and you will only have rows of ‘ID = 1,2,3’ | `semi_join()`
-`anti_join()` | Similar to `filter()`
+- **Variable types:** All
+- **When to use:** Change a variable name from "CTQ" to "ACTQ".
+- **Functions:** dplyr package: `rename(data, ACTQ = CTQ)`
+- **Resources:** [dplyr: rename](https://dplyr.tidyverse.org/reference/rename.html)
 
-It actually modify (filters) your original data frame and do not add anything (columns or rows) from the reference data frame. | [https://dplyr.tidyverse.org/reference/mutate-joins.html](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+#### Reshape data: wide to long, or long to wide
 
-[https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join)
+- **Variable types:** All
+- **When to use:** Typically each column is one variable ("ID, Variable 1, Variable 2, ..."), but sometimes you need several variables stacked into one column and sorted by ID (e.g. for a figure).
+- **Functions:**
+  - tidyr package, long to wide: `pivot_wider()`
+  - tidyr package, wide to long: `pivot_longer()`
+- **Resources:** [tidyr: pivot_wider](https://tidyr.tidyverse.org/reference/pivot_wider.html), [tidyr: pivot_longer](https://tidyr.tidyverse.org/reference/pivot_longer.html)
 
-[https://r4ds.hadley.nz/joins](https://r4ds.hadley.nz/joins) |
-| Merge data frames in different ways | All | Combine two different dataframes. | `merge()` | `merge()` is more flexible but complicated. | [https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/merge](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/merge)
+### Combine Data Frames, Rows, and Columns
 
-[https://bookdown.org/rwnahhas/IntroToR/merge-join.html](https://bookdown.org/rwnahhas/IntroToR/merge-join.html) |
-| List a cross table | All | When conducting a multifactorial experimental design (2x2), list all possible combinations of conditions. | `cross_join()` | It combines each row of two dataframes with each row of another dataframe to produce all possible combinations of rows; it may be used in the design of psychology experiments. | [https://www.statology.org/cross-join-in-r/](https://www.statology.org/cross-join-in-r/)
+The join examples below use two data frames: `data1` with IDs 1, 2, 3, 4 and `data2` with IDs 1, 2, 3, 5.
 
-[https://dplyr.tidyverse.org/reference/cross_join.html](https://dplyr.tidyverse.org/reference/cross_join.html) |
+#### Stack data frames vertically (add rows)
 
-# Syntax Sample
+- **Variable types:** All
+- **When to use:** Add more participants' data to the raw data frame.
+- **Functions:** dplyr package: `bind_rows()`; Base R: `rbind()`
+- **Resources:** [dplyr: bind_rows](https://dplyr.tidyverse.org/reference/bind_rows.html)
+
+#### Combine data frames side by side (add columns)
+
+- **Variable types:** All
+- **When to use:** Add more columns or variables.
+- **Functions:** dplyr package: `bind_cols()`; Base R: `cbind()`
+- **Comment:** Rows are matched by position, not by ID, so both data frames must have the same participants in the same order. To match by ID, use a join (below).
+- **Resources:** [dplyr: bind_cols](https://dplyr.tidyverse.org/reference/bind_cols.html)
+
+#### Merge two data frames by ID, keeping one side
+
+- **Variable types:** All
+- **When to use:** Add more variables to the raw data frame. If data1 and data2 share (some) IDs, you can merge the remaining columns using the IDs of data1 or data2 as the baseline.
+- **Functions:** dplyr package: `left_join(data1, data2, by = "ID")`, `right_join(data1, data2, by = "ID")`
+- **Comment:** When the IDs do not fully match, left or right decides whose IDs you keep. With `left_join()`, the result keeps only IDs 1, 2, 3, 4, and for ID 4 the variables from data2 will be NA.
+- **Resources:** [dplyr: Mutating joins](https://dplyr.tidyverse.org/reference/mutate-joins.html), [RDocumentation: plyr join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join), [R for Data Science: Joins](https://r4ds.hadley.nz/joins)
+
+#### Merge all data from both data frames
+
+- **Variable types:** All
+- **When to use:** You want all data from both datasets and don't want to drop anything. The combined data frame will have IDs 1, 2, 3, 4, 5.
+- **Functions:** `full_join()`
+- **Comment:** This keeps all data, and any missing information is filled with NA.
+- **Resources:** [dplyr: Mutating joins](https://dplyr.tidyverse.org/reference/mutate-joins.html), [RDocumentation: plyr join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join), [R for Data Science: Joins](https://r4ds.hadley.nz/joins)
+
+#### Merge two data frames, keeping only the overlapping rows
+
+- **Variable types:** All
+- **When to use:** You want the participants whose IDs appear in both datasets. The combined data frame will have IDs 1, 2, 3.
+- **Functions:** `inner_join()`
+- **Comment:** Only keeps the observations that match in the reference column.
+- **Resources:** [dplyr: Mutating joins](https://dplyr.tidyverse.org/reference/mutate-joins.html), [RDocumentation: plyr join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join), [R for Data Science: Joins](https://r4ds.hadley.nz/joins)
+
+#### Filter one data frame by another
+
+- **Variable types:** All
+- **When to use:** Use data2 as a reference to keep or drop rows of data1. The result has only the columns of data1 and nothing from data2: `semi_join()` keeps IDs 1, 2, 3, and `anti_join()` keeps ID 4.
+- **Functions:** `semi_join()`, `anti_join()`
+- **Comment:** Similar to `filter()`: it filters your original data frame and does not add anything (columns or rows) from the reference data frame.
+- **Resources:** [dplyr: Filtering joins](https://dplyr.tidyverse.org/reference/filter-joins.html), [RDocumentation: plyr join](https://www.rdocumentation.org/packages/plyr/versions/1.8.9/topics/join), [R for Data Science: Joins](https://r4ds.hadley.nz/joins)
+
+#### Merge data frames in different ways
+
+- **Variable types:** All
+- **When to use:** Combine two different data frames.
+- **Functions:** `merge()`
+- **Comment:** `merge()` is more flexible but more complicated.
+- **Resources:** [RDocumentation: merge](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/merge), [An Introduction to R for Research: Merge (join)](https://bookdown.org/rwnahhas/IntroToR/merge-join.html)
+
+#### List all combinations of conditions
+
+- **Variable types:** All
+- **When to use:** In a multifactorial experimental design (e.g. 2x2), list all possible combinations of conditions.
+- **Functions:** `cross_join()`
+- **Comment:** It combines each row of one data frame with each row of another to produce all possible combinations of rows, which is handy when designing psychology experiments.
+- **Resources:** [Statology: How to do a cross join in R](https://www.statology.org/cross-join-in-r/), [dplyr: cross_join](https://dplyr.tidyverse.org/reference/cross_join.html)
+
+## Syntax Sample
 
 ```r
-# Read csv file
-dataraw <- read_sav("C:\\Users\\Desktop\\data.sav") # notable, use \\ or / instead of \
+library(tidyverse)  # readr, dplyr, tidyr, stringr, forcats, purrr
+library(haven)      # read_sav()
 
-# list all csv files
+# Read an SPSS .sav file
+dataraw <- read_sav("C:\\Users\\Desktop\\data.sav") # note: use \\ or / instead of \
+
+# List all csv files
 csv_files <- list.files(path = "put your path here", pattern = "\\.csv$", full.names = TRUE)
 
-# read multiple csv files in a folder
+# Read multiple csv files in a folder
 folder_path <- "path/to/your/folder"
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE) # create a file_list
 data_list <- lapply(file_list, read.csv) # read all csv files on the file_list
-combined_data <- do.call(rbind, data_list) # combine all dataframe together
+combined_data <- do.call(rbind, data_list) # combine all data frames together
 
-# read multiple different files in a folder
+# Read multiple different files in a folder
 library(readxl)  # Load the readxl package for reading .xlsx files
 
-# Set the working directory and get the path
-folder_path <- setwk()  
+# Use the working directory as the folder path
+folder_path <- getwd()
 
 # List all files in the specified folder, including full paths
 file_list <- list.files(path = folder_path, full.names = TRUE)
@@ -357,50 +477,50 @@ data_list <- lapply(file_list, function(file) {
 # Optionally, remove NULL entries from the list
 data_list <- Filter(Negate(is.null), data_list)
 
-# Test data type
-str(data) 
-# Test specific variable in dataframe
+# Check data types
+str(data)
+# Check a specific variable in the data frame
 str(data$ACE)
 
-# convert all values to numeric
+# Convert all values to numeric
 dataraw <- as.data.frame(lapply(dataraw, as.numeric))
 # Or
 dataraw[] <- lapply(dataraw, as.numeric)
 
-# For all columns whose names begin with ‘A’, subtract the value by 1.
+# For all columns whose names begin with 'A', subtract 1 from the value
 dataraw <- dataraw %>%
   mutate(across(starts_with("A"), ~ . - 1))
 
-# Notably, when convert factor into numeric
+# Note: converting a factor into numeric
 as.numeric(factor(5:10)) # [1] 1 2 3 4 5 6
 f <- factor(1:5)
 ## what you typically meant and want:
 as.numeric(as.character(f))
 
-# Choose all columns after CM
+# Choose all columns from CM onward
 df_selected <- df[, which(colnames(df) == "CM"):ncol(df)]
-# OR use select()
+# Or use select()
 df_selected <- df %>%
   select(CM:last_col())
-  
-# delete row 2 and row 3
+
+# Delete row 2 and row 3
 df <- df[-c(2, 3), ]
 
-# delete column 2 and column 3
+# Delete column 2 and column 3
 df <- df[, -c(2, 3)]
 
-# choose a string from the fist one to the thid one
-prefixes <- substr(colnames(data), 1, 3) 
+# Take the first three characters of each column name
+prefixes <- substr(colnames(data), 1, 3)
 
-# select ()
+# select()
 # Select only Variable1 and Variable2 from the data frame
 select(data, Variable1, Variable2) # select V1 & V2
 
 # Exclude the column named 'Variable' from the data frame
 select(data, -Variable) # delete Variable
 
-# Exclude the column named 'Variable' from the data frame using a logical condition
-select(data, !Variable) # delete Variable (note: this is not a standard usage for select)
+# Exclude the column named 'Variable' with ! (negates a selection)
+select(data, !Variable) # delete Variable
 
 # Select columns from the 2nd to the 5th positions in the data frame
 select(data, 2:5) # select columns from position 2 to 5
@@ -411,7 +531,7 @@ select(data, starts_with("A")) # select columns that start with 'A'
 # Select columns that end with the letter 'A'
 select(data, ends_with("A")) # select columns that end with 'A'
 
-# Select participants whose age are more than 30, and only keep Name and Height columns.
+# Select participants whose age is more than 30, and only keep the Name and Height columns
 df <- subset(df, Age > 30, select = c(Name, Height))
 
 # Example character data
@@ -440,33 +560,32 @@ print(parsed_logical)  # Output: TRUE FALSE TRUE
 df %>% select(ID, everything()) # if you don't want to type the rest of the columns
 df %>% relocate(ID)
 
-# updates the values in the Age column by adding 1 to each value and removing Score column
+# Update the Age column by adding 1 to each value, and remove the Score column
 df %>% mutate(Age = Age + 1, Score = NULL)
 ```
 
-# Assignment
+## Assignment
 
 > *It doesn't matter if the code is neat and pretty, as long as you get there in the end!*
-> 
-- Import data as data frame or tibble. Export dataset as csv file.
-- Combine multiple files together as a big data frame.
-- Covert the factor variable into numeric.
-- Check the data frame, pull out the first 3 and last 5 rows as a dataframe.
-- Add a new column, rename it as ‘Mean’; add a new row, change the value to NULL.
-- Delete the first column, and remove the last line.
 
-## Functions Required to Know How to Use
+- Import data as a data frame or tibble. Export the dataset as a csv file.
+- Combine multiple files into one big data frame.
+- Convert the factor variable into numeric.
+- Check the data frame; pull out the first 3 and last 5 rows as a data frame.
+- Add a new column and name it "Mean"; add a new row and set its values to `NA`.
+- Delete the first column, and remove the last row.
+
+### Functions Required to Know How to Use
 
 Write down what they can do and practice using them.
 
-`file.choose()`; `here()` ;`read_csv()`; `write_csv()`; `ls()`; `arrange()`; `summary()`; `<-`; `%>%`; `str()`; `mutate()`; `as.factor()`; `as.numeric()`; `filter()`; `select()`; `start_with()`; `unique()`; `bind_rows()`; `bind_cols()`
+`file.choose()`, `here()`, `read_csv()`, `write_csv()`, `ls()`, `arrange()`, `summary()`, `<-`, `%>%`, `str()`, `mutate()`, `as.factor()`, `as.numeric()`, `filter()`, `select()`, `starts_with()`, `unique()`, `bind_rows()`, `bind_cols()`
 
-# Resource & Reference
+## Resources & References
 
-[**R for Data Science: Import, Tidy, Transform, Visualize, and Model Data**](https://r4ds.had.co.nz/)
+- [R for Data Science (1st edition): Import, Tidy, Transform, Visualize, and Model Data](https://r4ds.had.co.nz/)
+- [R Cookbook, 2nd Edition: Data Structures](https://rc2e.com/datastructures)
 
-[https://rc2e.com/datastructures](https://rc2e.com/datastructures)
-
-## Further study
+### Further Study
 
 Recommended classes or training
