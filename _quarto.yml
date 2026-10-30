@@ -31,6 +31,9 @@ book:
         - nonlinear-mediation.qmd
         - reliability-and-validity.qmd
 
+filters:
+  - list-table
+
 format:
   live-html:
     theme: cosmo

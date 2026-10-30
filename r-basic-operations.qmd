@@ -104,57 +104,52 @@ Tidyverse makes R much less painful. It is a collection of packages with utility
 
 ### Convert Variable Types
 
-#### Check data types
+These functions work on variables of any type.
 
-- **Variable types:** All
-- **When to use:** You want to see each variable's data type and decide whether to convert it.
-- **Functions:** `str()`
-- **Comment:** `str()` shows the type of a list, object, vector, or column.
-- **Resources:** [Statology: How to use str() function in R](https://www.statology.org/str-function-in-r/)
+::: {.list-table header-rows=1}
+- - Task
+  - Function
+  - When to use
+- - Check data types
+  - `str()`
+  - You want to see each variable's data type and decide whether to convert it. `str()` shows the type of a list, object, vector, or column.
 
-#### Convert to numeric
+    Read more: [Statology: How to use str() function in R](https://www.statology.org/str-function-in-r/)
+- - Convert to numeric
+  - `as.numeric(x, ...)`
+  - Create dummy variables, or convert factors to numbers after importing a csv file.
 
-- **Variable types:** All
-- **When to use:** Create dummy variables, or convert factors to numbers after importing a csv file.
-- **Functions:** `as.numeric(x, ...)`
-- **Comment:** When you use `as.numeric()` on a factor, R returns the internal integer code of each level, not the level itself. Use `as.numeric(as.character(x))` instead (see [Syntax Sample](#syntax-sample)).
-- **Resources:** [RDocumentation: numeric](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/numeric), [Data Wrangling Recipes in R: Numeric/integer variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chNumeric.html)
+    When you use `as.numeric()` on a factor, R returns the internal integer code of each level, not the level itself. Use `as.numeric(as.character(x))` instead (see [Syntax Sample](#syntax-sample)).
 
-#### Convert to character
+    Read more: [RDocumentation: numeric](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/numeric), [Data Wrangling Recipes in R: Numeric/integer variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chNumeric.html)
+- - Convert to character
+  - `as.character()`
+  - Convert numbers or logical values into text, e.g. participant IDs that should be treated as labels rather than numbers.
 
-- **Variable types:** All
-- **When to use:** Convert numbers or logical values into text, e.g. participant IDs that should be treated as labels rather than numbers.
-- **Functions:** `as.character()`
-- **Resources:** [RDocumentation: character](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/character)
+    Read more: [RDocumentation: character](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/character)
+- - Convert to logical
+  - `as.logical()`
+  - Convert numbers into `TRUE`/`FALSE`: 0 becomes `FALSE` and any non-zero number becomes `TRUE`. In the other direction, `as.numeric()` turns `TRUE` into 1 and `FALSE` into 0.
 
-#### Convert to logical
+    Read more: [RDocumentation: logical](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/logical), [Data Wrangling Recipes in R: Logical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chLogical.html)
+- - Convert to factor
+  - `as.factor()`
+  - Display levels instead of numbers in the value column.
 
-- **Variable types:** All
-- **When to use:** Convert numbers into `TRUE`/`FALSE`: 0 becomes `FALSE` and any non-zero number becomes `TRUE`. In the other direction, `as.numeric()` turns `TRUE` into 1 and `FALSE` into 0.
-- **Functions:** `as.logical()`
-- **Resources:** [RDocumentation: logical](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/logical), [Data Wrangling Recipes in R: Logical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chLogical.html)
+    Read more: [RDocumentation: factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor), [Data Wrangling Recipes in R: Factor/categorical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chFacts.html)
+- - Convert to date
+  - `as.Date()`, `format()`, `as.POSIXct()`, `as.POSIXlt()`
+  - Convert a string of numbers or characters into a date or time.
 
-#### Convert to factor
+    Read more: [Data Wrangling Recipes in R: Date/time variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chDate.html), [Stat2Labs: Introduction to working with dates in R](https://www.stat2labs.sites.grinnell.edu/Handouts/rtutorials/IntroDates.html)
+- - Convert a character vector into a more specific type
+  - readr package: the `parse_*()` functions, e.g. `parse_number()`, `parse_date()`
+  - You want to convert a character variable to the appropriate type (date, factor, logical, double, integer, etc.).
 
-- **Variable types:** All
-- **When to use:** Display levels instead of numbers in the value column.
-- **Functions:** `as.factor()`
-- **Resources:** [RDocumentation: factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor), [Data Wrangling Recipes in R: Factor/categorical variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chFacts.html)
+    These functions are very useful in data cleaning, as long as your data follows a specific pattern. `parse_number()` extracts the number from a string that contains non-numeric characters.
 
-#### Convert to date
-
-- **Variable types:** All
-- **When to use:** Convert a string of numbers or characters into a date or time.
-- **Functions:** `as.Date()`, `format()`, `as.POSIXct()`, `as.POSIXlt()`
-- **Resources:** [Data Wrangling Recipes in R: Date/time variables](https://bookdown.org/hcwatt99/Data_Wrangling_Recipes_in_R/chDate.html), [Stat2Labs: Introduction to working with dates in R](https://www.stat2labs.sites.grinnell.edu/Handouts/rtutorials/IntroDates.html)
-
-#### Convert a character vector into a more specific type
-
-- **Variable types:** All
-- **When to use:** You want to convert a character variable to the appropriate type (date, factor, logical, double, integer, etc.).
-- **Functions:** readr package: the `parse_*()` functions, e.g. `parse_number()`, `parse_date()`
-- **Comment:** These functions are very useful in data cleaning, as long as your data follows a specific pattern. `parse_number()` extracts the number from a string that contains non-numeric characters.
-- **Resources:** [readr: Introduction](https://readr.tidyverse.org/articles/readr.html)
+    Read more: [readr: Introduction](https://readr.tidyverse.org/articles/readr.html)
+:::
 
 ### Subset Selection and Modification
 

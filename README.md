@@ -42,4 +42,4 @@ The manual is not finished. Linked chapters are online; the others are planned.
 
 ## License
 
-The text and figures are licensed under [CC BY 4.0](LICENSE): you may share and adapt them with attribution. The code examples are licensed under [MIT](LICENSE-CODE), so you can use them in your own analyses. The quarto-live extension in `_extensions/` is third-party code under its own license.
+The text and figures are licensed under [CC BY 4.0](LICENSE): you may share and adapt them with attribution. The code examples are licensed under [MIT](LICENSE-CODE), so you can use them in your own analyses. The Quarto extensions in `_extensions/` (quarto-live and list-table) are third-party code under their own licenses.
