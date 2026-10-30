@@ -90,7 +90,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Mediation test, bootstrap
     - Moderation
     - Multiple group comparison
-- Reliability and validity: Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
+- [Reliability and validity](2_Junior%20Graduate%20Level/Reliability%20and%20Validity.md): Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
 - Longitudinal models
     - Longitudinal SEM
     - Latent growth curve model
