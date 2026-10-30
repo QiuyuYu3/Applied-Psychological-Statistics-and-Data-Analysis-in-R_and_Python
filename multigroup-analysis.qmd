@@ -1,6 +1,21 @@
+---
+engine: knitr
+format:
+  live-html:
+    webr:
+      packages:
+        - lavaan
+      resources:
+        - data/mydata_scored.csv
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
 # Multigroup Analysis
 
 A multigroup analysis fits the same model in two or more groups (for example, women and men) and tests whether its parameters differ across groups. The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd), in which A4 and A11 are already reverse-scored, with `gender` as the grouping variable. Because some items are missing, every model uses `missing = "fiml"`, which MLR supports; otherwise lavaan would drop every participant with a missing item.
+
+The code on this page runs in your browser and prints its output when the page loads. The first visit downloads lavaan, so the first results take a while to appear. You can edit any cell and run it again.
 
 ## 1. Measurement Invariance Testing (if you use latent variables)
 
@@ -12,34 +27,34 @@ Gradually constrain more parameters to be equal across groups, and test at each 
 
 If a step fails, you can try partial invariance (section 3) before you go on.
 
-```r
+```{webr}
+#| autorun: true
 library(lavaan)
 mydata <- read.csv("data/mydata_scored.csv")
+```
 
+```{webr}
+#| autorun: true
 model_cfa <- '
 FA1 =~ A1 + A2 + A3 + A4 + A5 + A6
 FA2 =~ A7 + A8 + A9 + A10 + A11 + A12
 FB1 =~ B1 + B2 + B3 + B4 + B5
 '
 
-# configural invariance: same structure, no equality constraints
-fit_cfa1 <- cfa(model_cfa, data = mydata, group = "gender", estimator = "MLR", missing = "fiml")
+# configural: same structure, no equality constraints
+fit_cfa1 <- cfa(model_cfa, data = mydata, group = "gender",
+                estimator = "MLR", missing = "fiml")
 # weak invariance: equal loadings
-fit_cfa2 <- cfa(model_cfa, data = mydata, group = "gender", group.equal = "loadings", estimator = "MLR", missing = "fiml")
+fit_cfa2 <- cfa(model_cfa, data = mydata, group = "gender",
+                group.equal = "loadings",
+                estimator = "MLR", missing = "fiml")
 # strong invariance: equal loadings and intercepts
-fit_cfa3 <- cfa(model_cfa, data = mydata, group = "gender", group.equal = c("loadings", "intercepts"), estimator = "MLR", missing = "fiml")
+fit_cfa3 <- cfa(model_cfa, data = mydata, group = "gender",
+                group.equal = c("loadings", "intercepts"),
+                estimator = "MLR", missing = "fiml")
 
 # model comparison tests
 lavTestLRT(fit_cfa1, fit_cfa2, fit_cfa3)
-```
-
-```
-Scaled Chi-Squared Difference Test (method = "satorra.bentler.2001")
-
-          Df   AIC   BIC  Chisq Chisq diff Df diff Pr(>Chisq)
-fit_cfa1 232 23651 24106 254.87
-fit_cfa2 246 23634 24030 265.68     11.883      14     0.6157
-fit_cfa3 260 23620 23957 279.52     13.901      14     0.4571
 ```
 
 `lavTestLRT()` compares the models in order: the first test compares the configural model with the weak invariance model, and the second compares the weak with the strong invariance model. With `estimator = "MLR"`, these are scaled chi-square difference tests.
@@ -48,8 +63,11 @@ Only when a p-value is non-significant (no significant loss of fit) is that leve
 
 The chi-square difference test is sensitive to sample size: in a large sample, even trivial differences are significant. Many papers therefore also report the change in CFI, where a drop larger than .01 suggests that invariance does not hold (Cheung & Rensvold, 2002):
 
-```r
-sapply(list(configural = fit_cfa1, weak = fit_cfa2, strong = fit_cfa3), fitMeasures, c("cfi.robust", "rmsea.robust"))
+```{webr}
+#| autorun: true
+fits <- list(configural = fit_cfa1, weak = fit_cfa2,
+             strong = fit_cfa3)
+sapply(fits, fitMeasures, c("cfi.robust", "rmsea.robust"))
 ```
 
 Here the robust CFI is .991, .992, and .992, so it does not drop at all.
@@ -58,7 +76,8 @@ Here the robust CFI is .991, .992, and .992, so it does not drop at all.
 
 Once weak invariance holds, add the structural paths and compare a model in which the paths are free with a model in which they are equal across groups. Both models keep the loadings equal, so the only difference between them is the paths.
 
-```r
+```{webr}
+#| autorun: true
 model_sem <- '
 FA1 =~ A1 + A2 + A3 + A4 + A5 + A6
 FA2 =~ A7 + A8 + A9 + A10 + A11 + A12
@@ -67,9 +86,13 @@ FB1 ~ FA1 + FA2
 '
 
 # paths free across groups
-fit_sem1 <- sem(model_sem, data = mydata, group = "gender", group.equal = "loadings", estimator = "MLR", missing = "fiml")
+fit_sem1 <- sem(model_sem, data = mydata, group = "gender",
+                group.equal = "loadings",
+                estimator = "MLR", missing = "fiml")
 # paths equal across groups
-fit_sem2 <- sem(model_sem, data = mydata, group = "gender", group.equal = c("loadings", "regressions"), estimator = "MLR", missing = "fiml")
+fit_sem2 <- sem(model_sem, data = mydata, group = "gender",
+                group.equal = c("loadings", "regressions"),
+                estimator = "MLR", missing = "fiml")
 
 anova(fit_sem1, fit_sem2)
 ```
@@ -82,10 +105,14 @@ A significant difference means at least one path differs between the groups. Her
 
 If weak or strong invariance fails, you can free the parameters that differ between the groups and keep the rest equal: this is partial invariance. `group.partial` lists the parameters to free, for example the intercept of A4. Report which parameters you freed.
 
-```r
-fit_cfa3_partial <- cfa(model_cfa, data = mydata, group = "gender",
-                        group.equal = c("loadings", "intercepts"), group.partial = c("A4 ~ 1"),
-                        estimator = "MLR", missing = "fiml")
+```{webr}
+#| autorun: true
+fit_cfa3_partial <- cfa(
+  model_cfa, data = mydata, group = "gender",
+  group.equal = c("loadings", "intercepts"),
+  group.partial = c("A4 ~ 1"),
+  estimator = "MLR", missing = "fiml"
+)
 lavTestLRT(fit_cfa2, fit_cfa3_partial)
 ```
 
@@ -93,7 +120,8 @@ lavTestLRT(fit_cfa2, fit_cfa3_partial)
 
 To test a single path instead of all of them, give it the same label in every group with `c()` (one label per group) and compare with the model in which it is free (see the [lavaan tutorial](https://lavaan.ugent.be/tutorial/groups.html#constraining-a-single-parameter-to-be-equal-across-groups)):
 
-```r
+```{webr}
+#| autorun: true
 model_sem_a <- '
 FA1 =~ A1 + A2 + A3 + A4 + A5 + A6
 FA2 =~ A7 + A8 + A9 + A10 + A11 + A12
@@ -101,7 +129,9 @@ FB1 =~ B1 + B2 + B3 + B4 + B5
 FB1 ~ c("a", "a") * FA1 + FA2
 '
 
-fit_sem3 <- sem(model_sem_a, data = mydata, group = "gender", group.equal = "loadings", estimator = "MLR", missing = "fiml")
+fit_sem3 <- sem(model_sem_a, data = mydata, group = "gender",
+                group.equal = "loadings",
+                estimator = "MLR", missing = "fiml")
 anova(fit_sem1, fit_sem3)
 ```
 

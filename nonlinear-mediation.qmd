@@ -1,3 +1,14 @@
+---
+engine: knitr
+format:
+  live-html:
+    webr:
+      packages:
+        - lavaan
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
 # Nonlinear Mediation
 
 SEM is built on factor analysis and regression, and I'd recommend reviewing regression before you start. Of course it's fine if you don't have a lot of knowledge in this area: from an application standpoint, you just need to understand the indicators and interpret the results.
@@ -152,7 +163,10 @@ Centering and scaling change the intercept and the slopes, respectively, and the
 
 The manual's [example dataset](example-data.qmd) only has linear relationships, so this chapter simulates its own data, with a quadratic X → M path and a linear M → Y path. Because we know the true model, the true indirect effect is $\theta = (0.8 - 0.6(X - 5)) \times 0.6$: it shrinks as X increases and is about zero at $X = 6.3$.
 
-```r
+The R code in this section runs in your browser and prints its output when the page loads. The first visit downloads lavaan, so the results take a while to appear. You can edit any cell and run it again.
+
+```{webr}
+#| autorun: true
 set.seed(2024)
 n <- 500
 X <- rnorm(n, mean = 5, sd = 1.3)
@@ -172,7 +186,8 @@ Because the model is nonlinear, to interpret the slope we normally use "represen
 
 `Xc2` is the square of the centered X. lavaan model syntax does not accept `I(X^2)`, so compute the square in the data first, as above; Mplus needs it as a variable too.
 
-```r
+```{webr}
+#| autorun: true
 library(lavaan)
 
 nl_model <- '
@@ -193,34 +208,28 @@ abHigh := b * aHigh
 '
 
 set.seed(100)
-nl_fit <- sem(nl_model, data = nl_data, fixed.x = FALSE, meanstructure = TRUE,
-              se = "bootstrap", bootstrap = 5000)
+nl_fit <- sem(nl_model, data = nl_data,
+              fixed.x = FALSE, meanstructure = TRUE,
+              se = "bootstrap", bootstrap = 200)
 summary(nl_fit)
-parameterEstimates(nl_fit, boot.ci.type = "perc", level = 0.95)
+parameterEstimates(nl_fit, boot.ci.type = "perc",
+                   level = 0.95)
 ```
+
+::: {.callout-note}
+The browser version uses only 200 bootstrap draws so that it finishes quickly. For a real analysis, use 5,000 draws or more. In R on a laptop, 5,000 draws of this model take about a minute; in the browser they take much longer.
+:::
 
 - Write the representative values into the model as numbers. Defining them as constants (`Low := -1.26`) makes the bootstrap fail in lavaan.
 - Bootstrap standard errors in lavaan need the ML estimator (the default), so `estimator = "MLR"` cannot be combined with `se = "bootstrap"`.
 - The model is saturated (df = 0), so its fit indices carry no information.
-- The bootstrap takes about a minute.
 
-The defined parameters, with 95% percentile bootstrap confidence intervals:
-
-```
-  label    est    se ci.lower ci.upper
-   aLow  1.614 0.060    1.498    1.740
-  aMean  0.806 0.037    0.735    0.881
-  aHigh -0.002 0.063   -0.130    0.120
-  abLow  1.033 0.080    0.880    1.195
- abMean  0.516 0.043    0.435    0.604
- abHigh -0.001 0.041   -0.082    0.078
-```
-
-The true indirect effects at these three values of X are 0.91, 0.46, and 0.00, and each interval contains its true value. The indirect effect is positive at low and average X and disappears at high X.
+The estimated indirect effects (`abLow`, `abMean`, `abHigh`) are 1.03, 0.52, and 0.00, close to the true values of 0.91, 0.46, and 0.00. Their confidence intervals are above zero at low and average X and include zero at high X: the indirect effect is positive at low and average X and disappears at high X.
 
 You can also compute the predicted value of M at the representative values, to check that it stays within the range of your measure:
 
-```r
+```{webr}
+#| autorun: true
 # extract parameters
 params <- parameterEstimates(nl_fit)
 
@@ -235,7 +244,7 @@ i1 + a1 * x_values + a2 * x_values^2
 
 ### Syntax in Mplus
 
-This follows the Mplus code in Hayes and Preacher (2010, Appendix A). First, write the data in Mplus format; `prepareMplusData()` also returns the matching `DATA` and `VARIABLE` lines.
+This follows the Mplus code in Hayes and Preacher (2010, Appendix A). This part runs in R on your computer, not in the browser. First, write the data in Mplus format; `prepareMplusData()` also returns the matching `DATA` and `VARIABLE` lines.
 
 ```r
 library(MplusAutomation)
