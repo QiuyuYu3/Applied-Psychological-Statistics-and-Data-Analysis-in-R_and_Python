@@ -153,6 +153,7 @@ summary(pool(fit.adv))
 - [naniar: Getting started](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html): a package for exploring missing values
 - [naniar: Visualising missing data](https://cran.r-project.org/web/packages/naniar/vignettes/naniar-visualisation.html)
 - [janitor: Overview of janitor functions](https://cran.r-project.org/web/packages/janitor/vignettes/janitor.html)
+- [UCLA OARC: Missing Data in R](https://stats.oarc.ucla.edu/r/seminars/missing-data-in-r/)
 
 ### Multiple Imputation
 

@@ -138,6 +138,7 @@ anova(fit_sem1, fit_sem3)
 ## Resources & References
 
 - [lavaan tutorial: Multiple groups](https://lavaan.ugent.be/tutorial/groups.html)
+- [UCLA OARC: Latent Growth Models (LGM) and Measurement Invariance with R in lavaan](https://stats.oarc.ucla.edu/r/seminars/lgm/)
 - [Jon Lefcheck: Multigroup analysis (SEM book)](https://jslefche.github.io/sem_book/multigroup-analysis.html)
 - [MultiGroup Path Analysis (YouTube)](https://www.youtube.com/watch?v=kKBm2v58E2A)
 

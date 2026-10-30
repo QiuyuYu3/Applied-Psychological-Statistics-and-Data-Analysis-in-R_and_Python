@@ -57,3 +57,9 @@ tbl_merge(
 ```
 
 ## Resources & References
+
+- [UCLA OARC: Introduction to Generalized Linear Regression Model in R](https://stats.oarc.ucla.edu/r/seminars/generalized_linear_regression/)
+- [UCLA OARC: Logit Regression (R Data Analysis Examples)](https://stats.oarc.ucla.edu/r/dae/logit-regression/)
+- [UCLA OARC: Ordinal Logistic Regression (R Data Analysis Examples)](https://stats.oarc.ucla.edu/r/dae/ordinal-logistic-regression/)
+- [UCLA OARC: Beyond Logistic Regression in R](https://stats.oarc.ucla.edu/r/seminars/beyond-logistic-regression-in-r/)
+- [UCLA OARC: Zero-inflated and Hurdle Models for Count Data in R](https://stats.oarc.ucla.edu/r/seminars/zero-inflated-and-hurdle-models-for-count-data-in-r/)

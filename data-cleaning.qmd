@@ -271,6 +271,8 @@ mydata <- mydata %>%
 
 ## Resources & References
 
+- [UCLA OARC: R Data Management](https://stats.oarc.ucla.edu/r/seminars/r-data-management/)
+
 ### Further Study
 
 Recommended classes or training

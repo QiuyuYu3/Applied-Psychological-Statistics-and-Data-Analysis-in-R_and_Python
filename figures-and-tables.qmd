@@ -145,6 +145,9 @@ tbl_merge(
 
 ## Resources & References
 
+- [UCLA OARC: R Graphics: Introduction to ggplot2](https://stats.oarc.ucla.edu/r/seminars/ggplot2_intro/)
+- [UCLA OARC: Output Tables in R](https://stats.oarc.ucla.edu/r/seminars/output-table-in-r/)
+
 ### Further Study
 
 Recommended classes or training

@@ -69,6 +69,8 @@ ggcorrplot(r, type = "lower", lab = TRUE)
 ## Resources & References
 
 - [ggcorrplot](https://rpkgs.datanovia.com/ggcorrplot/)
+- [UCLA OARC: Introduction to Linear Regression in R](https://stats.oarc.ucla.edu/r/seminars/intro-to-linear-regression-r/)
+- [UCLA OARC: Analysis and Visualization of Interactions in R](https://stats.oarc.ucla.edu/r/seminars/analysis-and-visualization-of-interactions-in-r/)
 
 References.
 

@@ -171,7 +171,7 @@ See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015
 - **When to use:** How do you define and measure your operational variables?
 - **Functions:** lavaan package, `cfa()`; see [CFA syntax](#cfa-syntax), which also gives the Mplus version
 - **Comment:** lavaan is by far the most widely used SEM package in R. The official documentation and forum cover a lot of tutorials and answer the questions you may have. I recommend making good use of the official forum.
-- **Resources:** [lavaan tutorial](https://lavaan.ugent.be/tutorial/)
+- **Resources:** [lavaan tutorial](https://lavaan.ugent.be/tutorial/), [UCLA OARC: Confirmatory Factor Analysis (CFA) in R with lavaan](https://stats.oarc.ucla.edu/r/seminars/rcfa/)
 
 ### Second-order CFA
 
@@ -428,6 +428,8 @@ For the lavaan and Mplus operators side by side, see the [quick reference](#lava
 
 - [Newsom: Categorical Data Analysis class](https://web.pdx.edu/~newsomj/cdaclass/)
 - [lavaan tutorial: Confirmatory factor analysis](https://lavaan.ugent.be/tutorial/cfa.html)
+- [UCLA OARC: Introduction to Structural Equation Modeling (SEM) in R with lavaan](https://stats.oarc.ucla.edu/r/seminars/rsem/)
+- [UCLA OARC: Confirmatory Factor Analysis (CFA) in R with lavaan](https://stats.oarc.ucla.edu/r/seminars/rcfa/)
 - [MplusAutomation (CRAN)](https://CRAN.R-project.org/package=MplusAutomation)
 
 Cheung, G. W., Cooper-Thomas, H. D., Lau, R. S., & Wang, L. C. (2024). Reporting reliability, convergent and discriminant validity with structural equation modeling: A review and best-practice recommendations. *Asia Pacific Journal of Management*, *41*(2), 745-783. https://doi.org/10.1007/s10490-023-09871-y
