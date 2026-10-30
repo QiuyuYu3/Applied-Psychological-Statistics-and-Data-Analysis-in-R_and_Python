@@ -65,7 +65,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Homogeneity of variance
     - Residual diagnostics
 - Basic statistics:
-    - Correlation and linear regression
+    - [Correlation and linear regression](1_Undergraduate%20Level/Correlation%20and%20Regression.md)
         - Correlation (Pearson, Spearman)
         - Simple linear regression
         - Multiple linear regression, multicollinearity test (VIF)
