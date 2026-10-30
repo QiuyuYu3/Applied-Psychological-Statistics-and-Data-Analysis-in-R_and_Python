@@ -10,12 +10,14 @@
 
 ## Syntax
 
-The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd).
+The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd). The code runs when the site is built, so the table below it is its output.
 
 ### Logistic regression
 
-```r
-library(tidyverse)
+```{r}
+#| message: false
+library(dplyr)
+library(tidyr)
 library(gtsummary)
 theme_gtsummary_compact()
 

@@ -46,7 +46,10 @@ Apart from the gtsummary example, the examples use the simulated dataset describ
 
 ### Report missing values with gtsummary
 
-```r
+This code runs when the site is built, so the table below it is its output.
+
+```{r}
+#| message: false
 library(dplyr)
 library(gtsummary) # trial is an example dataset in gtsummary
 
@@ -74,6 +77,7 @@ tbl2 <-
   ) %>%
   list(tbl1 %>% modify_column_hide(c(n, all_stat_cols()))) %>%
   tbl_merge(tab_spanner = FALSE)
+tbl2
 ```
 
 ### Little's MCAR test with naniar

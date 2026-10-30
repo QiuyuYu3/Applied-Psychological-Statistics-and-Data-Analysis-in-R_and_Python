@@ -114,13 +114,32 @@ How does the literature report the results?
 
 ## Syntax
 
-```r
+### Merge tables side by side
+
+The example uses the scored version of the simulated dataset described in [Example Data](example-data.qmd); [Generalized Linear Model](generalized-linear-model.qmd) has a fuller version with covariates. The code runs when the site is built, so the table below it is its output.
+
+```{r}
 library(gtsummary)
+mydata <- read.csv("data/mydata_scored.csv")
+
+# One logistic regression per outcome, as odds ratios
+table_a <- tbl_regression(
+  glm(y1 ~ A_total + B_total, data = mydata, family = binomial),
+  exponentiate = TRUE
+)
+table_b <- tbl_regression(
+  glm(y2 ~ A_total + B_total, data = mydata, family = binomial),
+  exponentiate = TRUE
+)
+table_c <- tbl_regression(
+  glm(y3 ~ A_total + B_total, data = mydata, family = binomial),
+  exponentiate = TRUE
+)
 
 # Merge several gtsummary tables side by side, each with its own spanning header
 tbl_merge(
   list(table_a, table_b, table_c),
-  tab_spanner = c("**Outcome A**", "**Outcome B**", "**Outcome C**")
+  tab_spanner = c("**y1**", "**y2**", "**y3**")
 )
 ```
 
