@@ -45,6 +45,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
 ### Undergraduate Level (Version 1.0)
 
 - [Introduction: why choose R, installation, interface, and data structures](1_Undergraduate%20Level/R%20Introduction.md)
+- [Example data: the simulated dataset used throughout the manual](1_Undergraduate%20Level/Example%20Data.md)
 - [R Basic Operations](1_Undergraduate%20Level/R%20Basic%20Operations.md)
     - Importing and exporting data
         - Read and save data frames
@@ -55,16 +56,16 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Plotting: ggplot2 package
     - Tables: gtsummary package
 - [Data cleaning](1_Undergraduate%20Level/Data%20Cleaning.md)
-    - Handling of missing values: direct deletion, multiple imputation, pros & cons
+    - [Handling of missing values](1_Undergraduate%20Level/Missing_Value.md): direct deletion, multiple imputation, pros & cons
     - Outliers
 - Questionnaires or cross-sectional research:
     - Reverse items, sum, average
-- Descriptive statistics: M, SD, frequency, odds
+- [Descriptive statistics](1_Undergraduate%20Level/Fundamental%20Statistics.md#descriptive-statistics): M, SD, frequency, odds
 - Assumption checks
     - Normality testing: univariate and multivariate normality tests
     - Homogeneity of variance
     - Residual diagnostics
-- Basic statistics:
+- [Basic statistics](1_Undergraduate%20Level/Fundamental%20Statistics.md#statistical-inference):
     - [Correlation and linear regression](1_Undergraduate%20Level/Correlation%20and%20Regression.md)
         - Correlation (Pearson, Spearman)
         - Simple linear regression
@@ -81,11 +82,11 @@ In the middle and later stages of programming, you will learn mainly by looking 
 
 ### Junior Graduate Level (Version 2.0)
 
-- Generalized linear model
+- [Generalized linear model](2_Junior%20Graduate%20Level/Generalized%20Linear%20Model.md)
     - Logistic regression
     - Ordinal regression
     - Count models: Poisson, negative binomial
-- SEM
+- [SEM](2_Junior%20Graduate%20Level/Structural%20Equation%20Modeling.md)
     - CFA & EFA
     - Mediation test, bootstrap
     - Moderation

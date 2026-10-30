@@ -1,0 +1,127 @@
+# Structural Equation Modeling (SEM)
+
+## Before You Start
+
+- What is SEM, and what does it include?
+    - Note that SEM has two parts: the structural model and the measurement model. Many beginners run into problems with SEM because they did not understand these basic concepts thoroughly at the start. Honestly, I'm too lazy to pin down every academic term myself; as long as you understand them, that's fine.
+- When should you use SEM?
+- What are latent variables, exogenous variables, and endogenous variables?
+- What makes a good structural equation model?
+- How do you test mediation?
+
+The procedures and indices discussed below (anything involving numbers) should be backed by the literature. Remember to cite it when you write your paper.
+
+## Basic Procedure
+
+1. Handle missing values and outliers. There are many ways to do this; here we recommend multiple imputation.
+2. Test for common method bias and multicollinearity: if all your data come from questionnaires, you need this step, and also check whether the variables are collinear.
+    1. Currently there is no "perfect" test for common method bias. The literature tends to recommend the directly measured latent variable (DMLV) approach, but it requires you to specify the source of the bias in advance and collect an extra questionnaire.
+3. Test univariate and multivariate normality, because non-normal data need different estimators: MLR or MLM for non-normal continuous data (MLR also handles missing data with FIML), and WLSMV for categorical (ordinal) data.
+4. Compute the correlations between the dimension (subscale) scores.
+5. Test the reliability and validity of the scales; there are different indices you can report.
+    1. CFA: this also counts as evidence of construct validity. There are two ways to set the scale of each latent variable, the fixed-variance method and the fixed-loading method, and both give the same model fit.
+        1. Fixed variance: the variance of the latent variable is fixed to 1, and all loadings are estimated freely.
+        2. Fixed loading: the loading of one item on each factor is fixed to 1, and the other loadings are estimated freely.
+        3. Software usually uses fixed loading by default; if you want fixed variance, you may need to adjust the code (in lavaan, `std.lv = TRUE`).
+6. Path analysis: now you can fit the full model (SEM). Most online tutorials and videos only teach this step and skip the ones before it; if you go straight to the full model, the results may be poor.
+    1. Report the fit indices, path coefficients, and other information from the path analysis.
+7. Model modification:
+    1. Look at the modification indices (MI). When an MI is above 3.84 (the critical chi-square value with 1 df at p < .05), you can add a residual correlation, usually between observed variables within the same factor. Because this is data-driven, it is best to have theoretical support. Don't follow every MI: stop once the fit indices are acceptable, otherwise the model becomes saturated. Mention these modifications in your paper. ~~Most people just don't explain why they made them (after all, they are data-driven).~~
+    2. Then keep revising the model: change some paths based on your theory, and compare the new model with the original one.
+8. Test mediation:
+    1. The Sobel test assumes the indirect effect is normally distributed, which is rarely true because the product of two coefficients is usually skewed, so bootstrapping is now the common choice. 5,000 resamples are common and 10,000 are recommended, depending on how powerful your computer is.
+        1. Judge significance by the 95% CI rather than the p-value: the effect is significant when the confidence interval does not include 0.
+    2. The total effect can be masked (for example, by suppression), so it may be non-significant. I don't recommend leaning heavily on terms like "full mediation" and "partial mediation". Highly recommended reading:
+        1. Rucker, D. D., Preacher, K. J., Tormala, Z. L., & Petty, R. E. (2011). Mediation analysis in social psychology: Current practices and new recommendations. *Social and Personality Psychology Compass*, *5*(6), 359-371. https://doi.org/10.1111/j.1751-9004.2011.00355.x
+    3. It can indeed happen that path coefficients or the indirect effect are not significant after bootstrapping; bootstrapping gives more accurate confidence intervals and a more robust significance test. There are many possible reasons, such as a small sample or a misspecified model; in short, the relationships among the variables are not robust.
+
+## Report Results
+
+- Which indices should you report?
+- [Joel Collier: How to present Structural Equation Modeling results in a journal (YouTube)](https://www.youtube.com/watch?v=kEuxOwTWKPA)
+
+## Notes
+
+1. Latent vs. observed variables: observed variables are the individual items on the questionnaire, and a latent variable is your operationalized construct, the variable you want to study. For example, if I want to study the severity of depression, that is an abstract concept; you need to make it operational, that is, measure it with a scale (or by other means).
+2. Don't be purely data-driven: SEM needs strong theoretical support. If you are purely data-driven, the discussion will be hard to write.
+3. Use WLSMV for categorical variables.
+4. When the model is too complex and the fit is not acceptable:
+    1. Simplify your model. A more complex model is not necessarily better; it has to make sense.
+    2. Take a single dimension into the SEM instead of putting several dimensions together in a mediation model.
+    3. Item parceling (explain why you used this method and how you did it):
+        1. The most common way is to use the dimension scores directly; if you want to use item parceling, look up the literature.
+            1. When I first started and didn't know better, I summed all the dimension scores into a total and analyzed it as a first-order latent variable. Later I found out you can't do that, haha. But in a sense, this is also a kind of item parceling.
+        2. However, **I strongly recommend using the raw (item-level) data rather than processed data**: if you use averages, you may ignore measurement error and introduce bias.
+5. Scale reliability and validity should already be tested in the pilot study, and then adjusted with the large sample. Remember to handle the reverse-scored items.
+6. Reporting indices: different papers report different indices. You don't need to report all of them, and they don't all need to meet the cutoffs. Some indices are affected by factors such as sample size (e.g., the p-value of the chi-square test); if one doesn't meet the cutoff, explain it in your paper.
+7. Generally, only after a simple mediation model works should you move on to more complex models.
+8. CFA is a must, although you don't have to report it, depending on the length of your paper. If the CFA fails, the model is pretty much unusable...
+9. EFA and CFA must use different samples; they are different things. You can roughly think of the EFA as a pilot study.
+10. If you designed the questionnaire yourself, factor loadings > 0.5 (more leniently, 0.4) are acceptable; for previously validated questionnaires, > 0.6. Look up literature support for these cutoffs.
+11. If the CFA fit is poor, you may need to delete items or further process the sample:
+    1. If you use an established questionnaire, it's better not to delete items casually (assuming you already have a large sample; otherwise your method may end up different from others'), unless your pilot study already revealed big problems (then you can redevelop the questionnaire).
+    2. Problematic (very large) path coefficients may mean a problem with the model structure, or that the coefficients are not standardized.
+    3. Your data quality is poor.
+12. A second-order factor model and a bifactor model are two different things.
+    1. A second-order factor model needs to go back to theory: you can only fit a higher-order model when the total of the subscales (dimensions) is meaningful. For example, the dimensions of a personality scale are theoretically uncorrelated, so a second-order model doesn't work and their total is meaningless; in that case, take each dimension (depending on your hypotheses) into the SEM separately.
+    2. A second-order factor needs three or more first-order factors; with only two, extra constraints are needed (such as fixing loadings). The same goes for items: for a CFA, each factor should have three or more items.
+13. Variables don't necessarily need to be correlated.
+14. Some situations, such as a non-significant total effect or path coefficients greater than 1 or less than -1, are normal, and your software won't report an error. But you need to look at them together with R² and the 95% CI.
+    1. Hayes, A. F. (2009). Beyond Baron and Kenny: Statistical mediation analysis in the new millennium. *Communication Monographs*, *76*(4), 408-420. https://doi.org/10.1080/03637750903310360
+
+See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015). Mediation analysis with intermediate confounding: Structural equation modeling viewed through the causal inference lens. *American Journal of Epidemiology*, *181*(1), 64-80. https://doi.org/10.1093/aje/kwu239
+
+## Summary and Practice
+
+### Confirmatory factor analysis (CFA)
+
+- **Variable types:** Any (continuous and categorical variables)
+- **When to use:** How do you define and measure your operational variables?
+- **Functions:** lavaan package
+- **Comment:** lavaan is by far the most widely used SEM package in R. The official documentation and forum cover a lot of tutorials and answer the questions you may have. I recommend making good use of the official forum.
+- **Resources:** [lavaan tutorial](https://lavaan.ugent.be/tutorial/)
+
+### Second-order CFA
+
+### Path analysis
+
+### Mediation analysis
+
+### Control variables (covariates)
+
+- **Variable types:** Any
+- **When to use:** My theory is that demographic variables (e.g., gender and age) affect (or predict) suicidal behavior, so to make the results more robust, I control for the effect of the demographic variables on suicidal behavior.
+- **Comment:**
+  - All the x's are independent variables: the one you focus on is the explanatory variable, and the ones you don't focus on are control variables. "Control" means you don't care about it, but because it affects y, it would affect the estimate for the explanatory variable you care about, so you add it to the model to control for it.
+  - The main purpose of control variables is to control potential confounders, so that the relationship between the independent and dependent variables is not distorted by them. By controlling these variables, we can estimate the direct and indirect effects of the independent variable on the dependent variable more accurately. Paths in SEM represent hypothesized causal relationships: the independent variable is the starting point of the causal chain, and the dependent variable is the outcome. If you regress the independent variable on a control variable, which one is the independent variable? The independent variable is generally considered independent. We usually treat X as exogenous; although X and C are correlated, the model is designed to make the causal paths and explanations explicit.
+  - The model aims to estimate the direct and indirect effects of X on Y and M. Although X and C are correlated, we care about the unique effect of X after controlling for C. C is added to control confounding, not to redefine X. When we say X and C are correlated, we only mean that they share some variance in the data; this does not mean that C fully determines X.
+  - How to specify it depends entirely on your theory (or previous studies). If you think a control variable affects the dependent variable, the mediator, or both, regress those variables on the control variable. If you think it only affects the dependent variable, regress only the dependent variable on it. In fact, regression works the same way: the control variables and the independent variable are allowed to correlate by default. But note: don't regress the independent variable on the control variables.
+- **Resources:** [lavaan Google Group: Add control variable in SEM](https://groups.google.com/g/lavaan/c/xdCnpHHTh6s), [lavaan Google Group: lavaan syntax for control variables in mediation](https://groups.google.com/g/lavaan/c/03gq8K324k8), [Cross Validated: How do you control for a variable in SEM with mediation?](https://stats.stackexchange.com/questions/550048/how-do-you-control-for-a-variable-in-sem-with-mediation-what-do-i-regress-onto), [Quora: What are control variables and how do I use them in regression analysis?](https://www.quora.com/What-are-control-variables-and-how-do-I-use-them-in-regression-analysis)
+
+### Moderation
+
+- **Variable types:** Usually categorical (compared with a multigroup model), but continuous variables also work: use them directly in an interaction term rather than splitting them into groups, which loses information.
+
+### Multigroup comparisons
+
+### Export results
+
+- **Functions:** lavaan, bruceR
+- **Resources:** [bruceR](https://psychbruce.github.io/bruceR/)
+
+### Figures
+
+- **Comment:** So far there is no best package for drawing SEM figures; you could use Word or PowerPoint.
+
+## Syntax
+
+## Resources & References
+
+- [Newsom: Categorical Data Analysis class](https://web.pdx.edu/~newsomj/cdaclass/)
+
+### Further Study
+
+#### Categorical Variables
+
+- [lavaan: Categorical data](https://lavaan.ugent.be/tutorial/cat.html)
+- [lavaan Google Group: How to enter binary observed outcome variable + scaling of latent variable?](https://groups.google.com/g/lavaan/c/FMkMUaj3FA8)
