@@ -44,16 +44,16 @@ In the middle and later stages of programming, you will learn mainly by looking 
 
 ### Undergraduate Level (Version 1.0)
 
-- Introduction: why choose R and how to use this document?
+- [Introduction: why choose R, installation, interface, and data structures](1_Undergraduate%20Level/R%20Introduction.md)
 - [R Basic Operations](1_Undergraduate%20Level/R%20Basic%20Operations.md)
     - Importing and exporting data
         - Read and save data frames
         - Merging data, converting variable types, naming variables and labels, and selecting variables
         - Read data from several files and combine data (left and right)
         - Data format: from wide to long
-- Exporting data analysis results
+- [Exporting data analysis results](1_Undergraduate%20Level/Figures%20and%20Tables.md)
     - Plotting: ggplot2 package
-    - Tables: gt package
+    - Tables: gtsummary package
 - Data cleaning
     - Handling of missing values: direct deletion, multiple imputation, pros & cons
     - Outliers
