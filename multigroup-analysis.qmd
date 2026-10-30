@@ -15,7 +15,7 @@ format:
 
 A multigroup analysis fits the same model in two or more groups (for example, women and men) and tests whether its parameters differ across groups. The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd), in which A4 and A11 are already reverse-scored, with `gender` as the grouping variable. Because some items are missing, every model uses `missing = "fiml"`, which MLR supports; otherwise lavaan would drop every participant with a missing item.
 
-The code on this page runs in your browser and prints its output when the page loads. The first visit downloads lavaan, so the first results take a while to appear. You can edit any cell and run it again.
+The code on this page runs in your browser and prints its output when the page loads. The first visit downloads lavaan, so the first results take a while to appear. FIML with MLR is slow in the browser: the cells on this page take a minute or more to finish there, several times longer than in R on your computer. You can edit any cell and run it again.
 
 ## 1. Measurement Invariance Testing (if you use latent variables)
 
