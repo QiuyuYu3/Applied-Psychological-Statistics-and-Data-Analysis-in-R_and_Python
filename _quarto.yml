@@ -39,3 +39,7 @@ format:
     theme: cosmo
     toc: true
     number-sections: false
+    grid:
+      sidebar-width: 280px
+      body-width: 1100px
+      margin-width: 280px
