@@ -1,0 +1,57 @@
+# Generalized Linear Model
+
+## Before You Start
+
+## Basic Procedure
+
+## Report Results
+
+## Summary and Practice
+
+## Syntax
+
+The examples use the scored version of the simulated dataset described in [Example Data](../1_Undergraduate%20Level/Example%20Data.md).
+
+### Logistic regression
+
+```r
+library(tidyverse)
+library(gtsummary)
+theme_gtsummary_compact()
+
+mydata <- read.csv("data/mydata_scored.csv")
+data_complete <- mydata %>%
+  drop_na(y1, y2, y3, C_total, gender, education, income, A_s1, A_s2, A_s3, B_s1, B_s2, B_s3) %>%
+  mutate(across(c(education, income), factor))
+
+gt_r1 <- glm(y1 ~ C_total + gender + education + income + A_s1 + A_s2 + A_s3 + B_s1 + B_s2 + B_s3, data_complete, family = binomial) %>%
+  tbl_regression(exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 3)) %>%
+  add_significance_stars(
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+
+gt_r2 <- glm(y2 ~ C_total + gender + education + income + A_s1 + A_s2 + A_s3 + B_s1 + B_s2 + B_s3, data_complete, family = binomial) %>%
+  tbl_regression(exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 3)) %>%
+  add_significance_stars(
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+
+gt_r3 <- glm(y3 ~ C_total + gender + education + income + A_s1 + A_s2 + A_s3 + B_s1 + B_s2 + B_s3, data_complete, family = binomial) %>%
+  tbl_regression(exponentiate = TRUE,
+                 pvalue_fun = ~ style_pvalue(.x, digits = 3)) %>%
+  add_significance_stars(
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+
+tbl_merge(
+  list(gt_r1, gt_r2, gt_r3),
+  tab_spanner = c("**Outcome 1**", "**Outcome 2**", "**Outcome 3**")
+)
+```
+
+## Resources & References

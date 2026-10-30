@@ -89,51 +89,59 @@ How does the literature report the results?
 
 ## Syntax
 
+The examples use the simulated dataset described in [Example Data](Example%20Data.md).
+
+```r
+library(tidyverse)
+mydata <- read.csv("data/mydata.csv")
+```
+
 ### Check the data
 
 ```r
 # Summarize one variable
-summary(data$variable)
+summary(mydata$age)
 # Summarize all variables
-summary(data)
+summary(mydata)
 ```
 
 ### Compute scale scores
 
 ```r
 mydata <- mydata %>%
-  mutate(across(starts_with("item"), ~. + 1))
+  mutate(across(B1:B17, ~. + 1))
 # Note: with na.rm = TRUE, a row with all items missing gets 0 instead of NA
 mydata <- mydata %>%
   mutate(
-    sub1 = rowSums(select(., starts_with("item")[1:5]), na.rm = TRUE),
+    B_s1 = rowSums(select(., starts_with("B")[1:5]), na.rm = TRUE),
+    B_s2 = rowSums(select(., starts_with("B")[6:12]), na.rm = TRUE),
+    B_s3 = rowSums(select(., starts_with("B")[13:17]), na.rm = TRUE),
   )
 mydata <- mydata %>%
-  mutate(total = rowSums(select(., c(sub1, sub2, sub3)), na.rm = TRUE))
+  mutate(B_total = rowSums(select(., c(B_s1, B_s2, B_s3)), na.rm = TRUE))
 ```
 
 ### Count missing values
 
 ```r
-library(DMwR2)
-sum(rowSums(is.na(dataraw)) > 0.7 * ncol(dataraw)) # Number of rows with more than 70% missing
-sum(!complete.cases(dataraw)) # Number of rows with any missing value
-sum(is.na(dataraw)) # Number of missing responses
-sum(!complete.cases(dataraw)) / nrow(dataraw) * 100 # Percentage of rows with any missing value
-sum(is.na(dataraw)) / (ncol(dataraw) * nrow(dataraw)) * 100 # Percentage of missing responses
+sum(rowSums(is.na(mydata)) > 0.7 * ncol(mydata)) # Number of rows with more than 70% missing
+sum(!complete.cases(mydata)) # Number of rows with any missing value
+sum(is.na(mydata)) # Number of missing responses
+sum(!complete.cases(mydata)) / nrow(mydata) * 100 # Percentage of rows with any missing value
+sum(is.na(mydata)) / (ncol(mydata) * nrow(mydata)) * 100 # Percentage of missing responses
 
 # Number of missing values per variable
-missing_count <- colSums(is.na(dataraw))
+missing_count <- colSums(is.na(mydata))
 
 # Percentage of missing values per variable
-missing_percent <- missing_count / nrow(dataraw) * 100
+missing_percent <- missing_count / nrow(mydata) * 100
 # Store the results in a data frame
 missing_summary <- data.frame(variable = names(missing_count),
                               missing_count = missing_count,
                               missing_percent = missing_percent)
 
 library(naniar)
-vis_miss(dataraw)
+vis_miss(mydata)
 ```
 
 ### Check normality
@@ -141,22 +149,22 @@ vis_miss(dataraw)
 ```r
 # Test normality
 library(modelsummary)
-datasummary_skim(select(mydata, sub1, sub2, sub3, total, x1, x2, x3), title = "Summary", fmt = fmt_sprintf("%.2f"))
+datasummary_skim(select(mydata, B_s1, B_s2, B_s3, B_total), title = "Summary", fmt = fmt_sprintf("%.2f"))
 library(mvnormalTest)
-mvnout <- mardia(select(mydata, sub1, sub2, sub3, total, x1, x2, x3))
+mvnout <- mardia(select(mydata, B_s1, B_s2, B_s3, B_total))
 ## Shapiro-Wilk univariate normality test
 mvnout$uv.shapiro
 ## Mardia multivariate normality test
 mvnout$mv.test
 
 library(MVN)
-mvn(data_cor, univariate_test = "SW", mvn_test = "mardia")
+mvn(select(mydata, B_s1, B_s2, B_s3), univariate_test = "SW", mvn_test = "mardia")
 ```
 
 ### Recode values and convert types
 
 ```r
-mydata$age[mydata$age %in% c(7, 8)] <- 3 # >65
+mydata$age_group[mydata$age_group %in% c(7, 8)] <- 7 # 65 and older
 mydata$group[mydata$group %in% c(4)] <- 0 # Reference group - 0
 
 mydata <- mydata %>%
@@ -168,11 +176,13 @@ mydata <- mydata %>%
     race == "5" ~ "Other",
   ))
 
-mydata <- mydata %>%
-  mutate(across(c(marital, race, sex, education), as.factor))
+recode_values(mydata$gender, "female" ~ 1, "male" ~ 0)
 
 mydata <- mydata %>%
-  mutate(across(-c(marital, race, sex, education), as.numeric))
+  mutate(across(c(marital, race, gender, education), as.factor))
+
+mydata <- mydata %>%
+  mutate(across(-c(marital, race, gender, education), as.numeric))
 
 mydata2 <- mydata %>%
   mutate(race = case_when(
@@ -182,8 +192,6 @@ mydata2 <- mydata %>%
     race == "Asian/Pacific Islander" ~ "Other",  # Recode Asian/Pacific Islander as Other
     race == "Other" ~ "Other"
   ))
-
-recode_values(df$gender, "female" ~ 1, "male" ~ 0)
 
 na_if(1:5, 5:1)
 #> [1]  1  2 NA  4  5
@@ -195,12 +203,8 @@ na_if(1:5, 5:1)
 group_means <- mydata %>%
   group_by(group) %>%
   summarise(
-    across(starts_with("QA"), ~ mean(.x, na.rm = TRUE)),
-    across(starts_with("FQA"), ~ mean(.x, na.rm = TRUE)),
-    across(starts_with("F2QA"), ~ mean(.x, na.rm = TRUE)),
-    across(starts_with("QB"), ~ mean(.x, na.rm = TRUE)),
-    across(starts_with("FQB"), ~ mean(.x, na.rm = TRUE)),
-    across(starts_with("F2QB"), ~ mean(.x, na.rm = TRUE))
+    across(starts_with("B_s"), ~ mean(.x, na.rm = TRUE)),
+    across(B_total, ~ mean(.x, na.rm = TRUE))
   ) %>%
   pivot_longer(
     cols = -group,
@@ -208,10 +212,9 @@ group_means <- mydata %>%
     values_to = "Mean"
   ) %>%
   mutate(
-    Time = case_when(
-      str_detect(Variable, "^QA|^QB") ~ "T1",
-      str_detect(Variable, "^FQA|^FQB") ~ "T2",
-      str_detect(Variable, "^F2QA|^F2QB") ~ "T3",
+    Type = case_when(
+      str_detect(Variable, "_s[0-9]$") ~ "Subscale",
+      str_detect(Variable, "_total$") ~ "Total",
       TRUE ~ "Other"
     )
   ) %>%
@@ -220,11 +223,9 @@ group_means <- mydata %>%
 group_means <- group_means %>%
   mutate(
     name_2 = case_when(
-      str_detect(Variable, "QA_D$") ~ "A_D",
-      str_detect(Variable, "QA_P$") ~ "A_P",
-      str_detect(Variable, "QA_T$") ~ "A_T",
-      str_detect(Variable, "QA_U$") ~ "A_U",
-      str_detect(Variable, "QB_T$") ~ "B_T",
+      str_detect(Variable, "s1$") ~ "Subscale 1",
+      str_detect(Variable, "s2$") ~ "Subscale 2",
+      str_detect(Variable, "s3$") ~ "Subscale 3",
       TRUE ~ Variable
     )
   ) %>%
@@ -241,18 +242,19 @@ race_counts <- mydata %>%
 ```r
 mydata <- mydata %>%
   mutate(
-    G_score1 = case_when(
-      score1 > 5 ~ 1,
-      score1 <= 5 ~ 0,
+    G_B_s1 = case_when(
+      B_s1 > 15 ~ 1,
+      B_s1 <= 15 ~ 0,
       TRUE ~ NA_real_
     )
   )
 
-# convert_to_group() is a user-defined function, not shown here
+# convert_to_group() is a user-defined function; this example version splits at the median
+convert_to_group <- function(x) as.numeric(x > median(x, na.rm = TRUE))
 mydata <- mydata %>%
   mutate(
-    G_score2 = convert_to_group(score2),
-    G_score3 = convert_to_group(score3),
+    G_B_s2 = convert_to_group(B_s2),
+    G_B_s3 = convert_to_group(B_s3),
   )
 
 mydata <- mydata %>%

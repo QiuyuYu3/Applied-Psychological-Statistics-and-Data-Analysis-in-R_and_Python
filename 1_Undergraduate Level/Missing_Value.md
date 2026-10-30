@@ -42,6 +42,8 @@ How does the literature report the results?
 
 ## Syntax
 
+Apart from the gtsummary example, the examples use the simulated dataset described in [Example Data](Example%20Data.md).
+
 ### Report missing values with gtsummary
 
 ```r
@@ -77,13 +79,15 @@ tbl2 <-
 ### Little's MCAR test with naniar
 
 ```r
+library(dplyr)
 library(naniar)
+mydata <- read.csv("data/mydata.csv")
 # Convert the listed variables to factors with mutate() and across()
-dataraw <- dataraw %>%
-  mutate(across(c(gender, race, income, education, age, starts_with("item")), factor))
+mydata <- mydata %>%
+  mutate(across(c(gender, race, income, education, age_group, C1:C10), factor))
 
 # Little's MCAR test assumes multivariate normality, so it is not recommended for skewed data
-NAresult <- mcar_test(dataraw)
+NAresult <- mcar_test(mydata)
 NAresult
 ```
 
@@ -92,13 +96,17 @@ NAresult
 ```r
 library(dplyr)
 library(mice)
+mydata <- read.csv("data/mydata.csv")
+# mice needs categorical variables as factors; a character column is dropped as a constant
+mydata <- mydata %>%
+  mutate(gender = factor(gender))
 
 ### Simple mice workflow
-# Step 1: impute m datasets; drop the ID column first (mice(select(data, -ID)) alone uses the defaults m = 5, maxit = 5)
-imp <- mice(select(data, -ID), m = 5, maxit = 50, method = "pmm")
+# Step 1: impute m datasets; drop the ID column first (mice(select(mydata, -id)) alone uses the defaults m = 5, maxit = 5)
+imp <- mice(select(mydata, -id), m = 5, maxit = 50, method = "pmm")
 
 # Step 2: fit the same model on every imputed dataset
-fit <- with(imp, lm(y ~ x1 + x2))
+fit <- with(imp, lm(A1 ~ age + gender))
 
 # Step 3: pool the results with Rubin's rules
 summary(pool(fit))
@@ -109,7 +117,7 @@ data_long <- complete(imp, action = "long", include = TRUE) # all m datasets sta
 
 ### Advanced mice workflow
 # Step 1: initialize a mice object without running any iterations
-init <- mice(select(data, -ID), maxit = 0)
+init <- mice(select(mydata, -id), maxit = 0)
 
 # Step 2: extract method vector and predictor matrix
 (meth <- init$method) # the imputation method for each variable, chosen by its data type
@@ -119,7 +127,7 @@ init <- mice(select(data, -ID), maxit = 0)
 meth[4] <- "pmm"
 
 # Step 4: run imputations
-mice.out.adv <- mice(select(data, -ID),
+mice.out.adv <- mice(select(mydata, -id),
                      predictorMatrix = pred,
                      method = meth,
                      m = 20,
@@ -130,7 +138,7 @@ plot(mice.out.adv) # visualize change in parameters from iteration to iteration
 stripplot(mice.out.adv) # visualize distributions of imputed data vs. observed data
 
 # Then analyze and pool as in the simple workflow
-fit.adv <- with(mice.out.adv, lm(y ~ x1 + x2))
+fit.adv <- with(mice.out.adv, lm(A1 ~ age + gender))
 summary(pool(fit.adv))
 ```
 

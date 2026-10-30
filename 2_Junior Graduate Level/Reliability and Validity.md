@@ -22,17 +22,20 @@ R package: [bruceR](https://cran.r-project.org/package=bruceR)
 
 ### Subscales and total scales
 
+The examples use the simulated dataset described in [Example Data](../1_Undergraduate%20Level/Example%20Data.md). A4 and A11 are reverse-keyed.
+
 ```r
 library(bruceR)
 library(GPArotation)
-Alpha(mydata, varrange="A1:A6")
-Alpha(mydata, varrange="A7:A12")
+mydata <- read.csv("data/mydata.csv")
+Alpha(mydata, varrange="A1:A6", rev=cc("A4"))
+Alpha(mydata, varrange="A7:A12", rev=cc("A11"))
 Alpha(mydata, varrange="A13:A18")
 Alpha(mydata, vars=cc("B1, B2, B3, B4, B5"))
 Alpha(mydata, vars=cc("B6, B7, B8, B9, B10, B11, B12"))
 Alpha(mydata, vars=cc("B13, B14, B15, B16, B17"))
 
-Alpha(mydata, varrange="A1:A18")
+Alpha(mydata, varrange="A1:A18", rev=cc("A4, A11"))
 Alpha(mydata, varrange="B1:B17")
 
 Alpha(mydata, varrange="C1:C10")
