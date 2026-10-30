@@ -18,7 +18,7 @@ How does the literature report the results?
 
 Explain and comment the code.
 
-The examples use the scored version of the simulated dataset described in [Example Data](Example%20Data.md).
+The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd).
 
 ### Correlation table
 

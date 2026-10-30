@@ -10,7 +10,7 @@
 
 ## Syntax
 
-The examples use the scored version of the simulated dataset described in [Example Data](../1_Undergraduate%20Level/Example%20Data.md).
+The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd).
 
 ### Logistic regression
 

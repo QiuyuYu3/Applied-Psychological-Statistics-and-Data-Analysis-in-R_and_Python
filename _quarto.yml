@@ -1,0 +1,32 @@
+project:
+  type: book
+  output-dir: _book
+  resources:
+    - data/
+
+book:
+  title: "Applied Psychological Statistics and Data Analysis in R and Python"
+  search: true
+  chapters:
+    - index.qmd
+    - part: "Undergraduate Level"
+      chapters:
+        - r-introduction.qmd
+        - example-data.qmd
+        - r-basic-operations.qmd
+        - figures-and-tables.qmd
+        - data-cleaning.qmd
+        - missing-values.qmd
+        - fundamental-statistics.qmd
+        - correlation-and-regression.qmd
+    - part: "Junior Graduate Level"
+      chapters:
+        - generalized-linear-model.qmd
+        - structural-equation-modeling.qmd
+        - reliability-and-validity.qmd
+
+format:
+  live-html:
+    theme: cosmo
+    toc: true
+    number-sections: false

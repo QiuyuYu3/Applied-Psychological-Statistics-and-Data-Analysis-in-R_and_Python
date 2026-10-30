@@ -89,7 +89,7 @@ How does the literature report the results?
 
 ## Syntax
 
-The examples use the simulated dataset described in [Example Data](Example%20Data.md).
+The examples use the simulated dataset described in [Example Data](example-data.qmd).
 
 ```r
 library(tidyverse)

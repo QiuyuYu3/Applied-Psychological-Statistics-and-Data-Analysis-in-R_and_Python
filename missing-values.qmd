@@ -42,7 +42,7 @@ How does the literature report the results?
 
 ## Syntax
 
-Apart from the gtsummary example, the examples use the simulated dataset described in [Example Data](Example%20Data.md).
+Apart from the gtsummary example, the examples use the simulated dataset described in [Example Data](example-data.qmd).
 
 ### Report missing values with gtsummary
 

@@ -22,7 +22,7 @@ R package: [bruceR](https://cran.r-project.org/package=bruceR)
 
 ### Subscales and total scales
 
-The examples use the simulated dataset described in [Example Data](../1_Undergraduate%20Level/Example%20Data.md). A4 and A11 are reverse-keyed.
+The examples use the simulated dataset described in [Example Data](example-data.qmd). A4 and A11 are reverse-keyed.
 
 ```r
 library(bruceR)

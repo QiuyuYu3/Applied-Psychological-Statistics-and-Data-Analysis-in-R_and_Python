@@ -1,3 +1,7 @@
+---
+engine: markdown
+---
+
 # R Introduction: Installation, Interface, Data Structure
 
 ## Advantages of R and Why We Choose R
@@ -23,35 +27,35 @@ R is a programming language; RStudio is an integrated development environment (I
 
 ## Interface Operations
 
-![The RStudio interface: the script editor, the Environment, Plots and Help panes, the Console, and the Packages pane](../Attachments/r-intro-rstudio-interface.png)
+![The RStudio interface: the script editor, the Environment, Plots and Help panes, the Console, and the Packages pane](images/r-intro-rstudio-interface.png)
 
 ### Where you can change settings
 
-![Tools menu with Global Options](../Attachments/r-intro-tools-global-options.png)
+![Tools menu with Global Options](images/r-intro-tools-global-options.png)
 
-![Global Options dialog, Appearance page](../Attachments/r-intro-options-appearance.png)
+![Global Options dialog, Appearance page](images/r-intro-options-appearance.png)
 
 ### Cheat Sheets
 
 RStudio provides cheat sheets under **Help > Cheat Sheets**, and there are many more [cheat sheets on GitHub](https://github.com/rstudio/cheatsheets). But ChatGPT is my best cheat sheet.
 
-![Help menu with the Cheat Sheets submenu](../Attachments/r-intro-help-cheat-sheets.png)
+![Help menu with the Cheat Sheets submenu](images/r-intro-help-cheat-sheets.png)
 
-![The Posit cheatsheets repository on GitHub](../Attachments/r-intro-cheatsheets-github.png)
+![The Posit cheatsheets repository on GitHub](images/r-intro-cheatsheets-github.png)
 
 ## Create Your First Script or Project
 
-![File menu: New File, New Project, and Open File in New Column](../Attachments/r-intro-file-menu.png)
+![File menu: New File, New Project, and Open File in New Column](images/r-intro-file-menu.png)
 
-![File > New File submenu: R Script, Quarto Document, R Notebook, R Markdown](../Attachments/r-intro-new-file-menu.png)
+![File > New File submenu: R Script, Quarto Document, R Notebook, R Markdown](images/r-intro-new-file-menu.png)
 
 ### Project
 
 When you need to work on a project (like a thesis) rather than write a simple script, I recommend using an R Project. You choose a folder and create multiple scripts in it. These scripts share the same working directory (the project folder), so you can use relative paths, and each project keeps its own environment and history separate from your other projects.
 
-![New Project Wizard: New Directory, Existing Directory, or Version Control](../Attachments/r-intro-new-project-wizard.png)
+![New Project Wizard: New Directory, Existing Directory, or Version Control](images/r-intro-new-project-wizard.png)
 
-![Create a project from an existing directory, with Open in new session checked](../Attachments/r-intro-project-existing-directory.png)
+![Create a project from an existing directory, with Open in new session checked](images/r-intro-project-existing-directory.png)
 
 ### R Markdown
 
@@ -74,9 +78,9 @@ When you need to work on a project (like a thesis) rather than write a simple sc
 > ```
 > ````
 
-![Code chunks in an R Markdown file: you can fold code chunks and create an interactive table](../Attachments/r-intro-rmarkdown-chunks.png)
+![Code chunks in an R Markdown file: you can fold code chunks and create an interactive table](images/r-intro-rmarkdown-chunks.png)
 
-![Knit and Knit on Save run the whole document and save the output as a file; Source shows the code and Visual previews the final document](../Attachments/r-intro-rmarkdown-knit-visual.png)
+![Knit and Knit on Save run the whole document and save the output as a file; Source shows the code and Visual previews the final document](images/r-intro-rmarkdown-knit-visual.png)
 
 #### Reference Resources
 
@@ -102,7 +106,7 @@ remove.packages("dplyr")
 
 You can also install a package from the Packages pane: **Packages > Install**.
 
-![Packages pane: the Install button opens the Install Packages dialog](../Attachments/r-intro-install-packages.png)
+![Packages pane: the Install button opens the Install Packages dialog](images/r-intro-install-packages.png)
 
 #### Check if a Package is Successfully Installed
 
@@ -180,7 +184,7 @@ In R, variables are used to store data values. R is a dynamically-typed language
 | logical | `c(TRUE, FALSE, TRUE, FALSE)` | `[1] TRUE FALSE TRUE FALSE` |
 | factor | `factor(c("a", "c", "c", "b"))` | `[1] a c c b`, `Levels: a b c` |
 
-![Data structures: a vector and a matrix hold one type; a list can hold any type in each element; a data frame holds one type per column](../Attachments/r-intro-data-structures.svg)
+![Data structures: a vector and a matrix hold one type; a list can hold any type in each element; a data frame holds one type per column](images/r-intro-data-structures.svg)
 
 ### Variable Naming Rules
 
@@ -314,7 +318,7 @@ name <- "Alice"
 df <- data.frame(id = 1:3, name = c("Alice", "Bob", "Charlie"))
 ```
 
-![The Environment pane can store many kinds of objects; click one to view its content](../Attachments/r-intro-environment-objects.png)
+![The Environment pane can store many kinds of objects; click one to view its content](images/r-intro-environment-objects.png)
 
 ## Common Shortcuts
 

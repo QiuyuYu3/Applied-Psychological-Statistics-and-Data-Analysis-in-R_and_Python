@@ -1,3 +1,17 @@
+---
+engine: knitr
+format:
+  live-html:
+    webr:
+      packages:
+        - dplyr
+        - readr
+      resources:
+        - data/mydata.csv
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
 # R Basic Operations
 
 ## Before You Start
@@ -12,11 +26,11 @@
 
 From the menu, **File > Import Dataset**:
 
-![Import Dataset](../Attachments/Import%20Dataset.png)
+![Import Dataset](images/import-dataset.png)
 
 Or from the Environment pane, **Import Dataset**:
 
-![Environment](../Attachments/environment.png)
+![Environment](images/environment.png)
 
 ### Useful Packages: [Tidyverse](https://www.tidyverse.org/)
 
@@ -435,6 +449,10 @@ The join examples below use two data frames: `data1` with IDs 1, 2, 3, 4 and `da
 
 ## Syntax Sample
 
+### Read files on your computer
+
+These examples read files from your own computer, so run them in RStudio.
+
 ```r
 library(tidyverse)  # readr, dplyr, tidyr, stringr, forcats, purrr
 library(haven)      # read_sav()
@@ -476,64 +494,88 @@ data_list <- lapply(file_list, function(file) {
 })
 # Optionally, remove NULL entries from the list
 data_list <- Filter(Negate(is.null), data_list)
+```
 
+### Practice with the example data
+
+The cells below run in your browser on the simulated dataset described in [Example Data](example-data.qmd). Edit the code and run it; the first cell loads the packages and the data.
+
+```{webr}
+#| autorun: true
+library(dplyr)
+library(readr)
+mydata <- read.csv("data/mydata.csv")
+```
+
+```{webr}
 # Check data types
-str(data)
+str(mydata)
 # Check a specific variable in the data frame
-str(data$score)
+str(mydata$A1)
+```
 
-# Convert all values to numeric
-dataraw <- as.data.frame(lapply(dataraw, as.numeric))
+```{webr}
+# Convert all values to numeric (gender is text, so it becomes NA with a warning)
+mydata_num <- as.data.frame(lapply(mydata, as.numeric))
 # Or
-dataraw[] <- lapply(dataraw, as.numeric)
+mydata_num[] <- lapply(mydata_num, as.numeric)
 
 # For all columns whose names begin with 'A', subtract 1 from the value
-dataraw <- dataraw %>%
-  mutate(across(starts_with("A"), ~ . - 1))
+# starts_with() ignores case by default, so it would also match age and age_group
+mydata_num <- mydata_num %>%
+  mutate(across(starts_with("A", ignore.case = FALSE), ~ . - 1))
+```
 
+```{webr}
 # Note: converting a factor into numeric
 as.numeric(factor(5:10)) # [1] 1 2 3 4 5 6
 f <- factor(1:5)
 ## what you typically meant and want:
 as.numeric(as.character(f))
+```
 
-# Choose all columns from CM onward
-df_selected <- df[, which(colnames(df) == "CM"):ncol(df)]
+```{webr}
+# Choose all columns from C1 onward
+df_selected <- mydata[, which(colnames(mydata) == "C1"):ncol(mydata)]
 # Or use select()
-df_selected <- df %>%
-  select(CM:last_col())
+df_selected <- mydata %>%
+  select(C1:last_col())
 
 # Delete row 2 and row 3
-df <- df[-c(2, 3), ]
+df <- mydata[-c(2, 3), ]
 
 # Delete column 2 and column 3
 df <- df[, -c(2, 3)]
 
 # Take the first three characters of each column name
-prefixes <- substr(colnames(data), 1, 3)
+prefixes <- substr(colnames(mydata), 1, 3)
+```
 
+```{webr}
 # select()
-# Select only Variable1 and Variable2 from the data frame
-select(data, Variable1, Variable2) # select V1 & V2
+# Select only A1 and A2 from the data frame
+select(mydata, A1, A2) # select A1 & A2
 
-# Exclude the column named 'Variable' from the data frame
-select(data, -Variable) # delete Variable
+# Exclude the column named 'age' from the data frame
+select(mydata, -age) # delete age
 
-# Exclude the column named 'Variable' with ! (negates a selection)
-select(data, !Variable) # delete Variable
+# Exclude the column named 'age' with ! (negates a selection)
+select(mydata, !age) # delete age
 
 # Select columns from the 2nd to the 5th positions in the data frame
-select(data, 2:5) # select columns from position 2 to 5
+select(mydata, 2:5) # select columns from position 2 to 5
 
-# Select columns that start with the letter 'A'
-select(data, starts_with("A")) # select columns that start with 'A'
+# Select columns that start with the letter 'A' (case-sensitive)
+select(mydata, starts_with("A", ignore.case = FALSE)) # select columns that start with 'A'
 
-# Select columns that end with the letter 'A'
-select(data, ends_with("A")) # select columns that end with 'A'
+# Select columns that end with '1'
+select(mydata, ends_with("1")) # select columns that end with '1'
 
-# Select participants whose age is more than 30, and only keep the Name and Height columns
-df <- subset(df, Age > 30, select = c(Name, Height))
+# Select participants whose age is more than 30, and only keep the id and gender columns
+df <- subset(mydata, age > 30, select = c(id, gender))
+```
 
+```{webr}
 # Example character data
 char_integer <- c("1", "2", "3")
 char_double <- c("1.1", "2.2", "3.3")
@@ -555,13 +597,15 @@ print(parsed_date)  # Output: 2024-08-22 2024-09-01 2024-10-15
 # Convert character data to logical
 parsed_logical <- parse_logical(char_logical)
 print(parsed_logical)  # Output: TRUE FALSE TRUE
+```
 
-# Reorder columns or variables
-df %>% select(ID, everything()) # if you don't want to type the rest of the columns
-df %>% relocate(ID)
+```{webr}
+# Reorder columns or variables: move gender to the front
+mydata %>% select(gender, everything()) # if you don't want to type the rest of the columns
+mydata %>% relocate(gender)
 
-# Update the Age column by adding 1 to each value, and remove the Score column
-df %>% mutate(Age = Age + 1, Score = NULL)
+# Update the age column by adding 1 to each value, and remove the y1 column
+mydata %>% mutate(age = age + 1, y1 = NULL)
 ```
 
 ## Assignment
