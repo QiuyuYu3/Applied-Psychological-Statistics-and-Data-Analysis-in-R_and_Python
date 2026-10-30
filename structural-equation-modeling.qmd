@@ -215,6 +215,23 @@ The code in this section runs in your browser and prints its output when the pag
 
 The examples use the scored version of the simulated dataset described in [Example Data](example-data.qmd), in which A4 and A11 are already reverse-scored. Some items are missing, so every model uses `missing = "fiml"` with the MLR estimator (step 3 of the Basic Procedure).
 
+### lavaan Syntax Quick Reference {#lavaan-syntax}
+
+The operators used in the models on this page, with their Mplus equivalents. [UCLA OARC: Quick reference of lavaan syntax](https://stats.oarc.ucla.edu/r/seminars/rsem/#s1d) gives the same list with short examples.
+
+| | lavaan | Mplus |
+|---|---|---|
+| Factor measured by items | `F =~ x1 + x2 + x3` | `F BY x1-x3;` |
+| Regression | `y ~ x` | `y ON x;` |
+| Covariance | `x1 ~~ x2` | `x1 WITH x2;` |
+| Variance | `x ~~ x` | `x;` |
+| Mean or intercept | `x ~ 1` | `[x];` |
+| Fix a parameter at a value | `F =~ 1*x1` | `F BY x1@1;` |
+| Free a parameter that is fixed by default | `F =~ NA*x1` | `F BY x1*;` |
+| Label a parameter | `y ~ a*x` | `y ON x (a);` |
+| New parameter from labels | `ab := a*b` | `MODEL CONSTRAINT: NEW(ab); ab = a*b;` |
+| Robust ML estimator | `estimator = "MLR"` | `ANALYSIS: ESTIMATOR = MLR;` |
+
 ### Confirmatory Factor Analysis (CFA) {#cfa-syntax}
 
 #### One Factor
@@ -405,20 +422,7 @@ MODEL:
 
 With missing data, Mplus uses FIML by default. `STANDARDIZED` prints the STDYX solution, which matches lavaan's `Std.all`, and R-SQUARE; `TECH1` numbers every free parameter, so you can check what Mplus estimated. If you need lavaan's results to match Mplus output as closely as possible, add `mimic = "Mplus"` to `cfa()`.
 
-lavaan and Mplus syntax side by side:
-
-| | lavaan | Mplus |
-|---|---|---|
-| Factor measured by items | `F =~ x1 + x2 + x3` | `F BY x1-x3;` |
-| Regression | `y ~ x` | `y ON x;` |
-| Covariance | `x1 ~~ x2` | `x1 WITH x2;` |
-| Variance | `x ~~ x` | `x;` |
-| Mean or intercept | `x ~ 1` | `[x];` |
-| Fix a parameter at a value | `F =~ 1*x1` | `F BY x1@1;` |
-| Free a parameter that is fixed by default | `F =~ NA*x1` | `F BY x1*;` |
-| Label a parameter | `y ~ a*x` | `y ON x (a);` |
-| New parameter from labels | `ab := a*b` | `MODEL CONSTRAINT: NEW(ab); ab = a*b;` |
-| Robust ML estimator | `estimator = "MLR"` | `ANALYSIS: ESTIMATOR = MLR;` |
+For the lavaan and Mplus operators side by side, see the [quick reference](#lavaan-syntax) at the start of this section.
 
 ## Resources & References
 
