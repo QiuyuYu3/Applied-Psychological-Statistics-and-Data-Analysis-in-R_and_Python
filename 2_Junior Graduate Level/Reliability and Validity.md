@@ -25,17 +25,17 @@ R package: [bruceR](https://cran.r-project.org/package=bruceR)
 ```r
 library(bruceR)
 library(GPArotation)
-Alpha(data2, varrange="BSI1:BSI6")
-Alpha(data2, varrange="BSI7:BSI12")
-Alpha(data2, varrange="BSI13:BSI18")
-Alpha(data2, vars=cc("SLE_DisturbingDreams, SLE_Relivingit, SLE_RemindedUpset, SLE_PhysicalReactions, SLE_DisturbingThoughts"))
-Alpha(data2, vars=cc("SLE_AvoidThinking, SLE_AvoidActivities, SLE_TroubleRemembering, SLE_LossofInterestActivities, SLE_DistantfromPeople, SLE_EmotionallyNumb, SLE_FutureShortened"))
-Alpha(data2, vars=cc("SLE_FallingorStayingSleep, SLE_Irritable, SLE_Concentrating, SLE_SuperAlert, SLE_EasilyStartled"))
+Alpha(mydata, varrange="A1:A6")
+Alpha(mydata, varrange="A7:A12")
+Alpha(mydata, varrange="A13:A18")
+Alpha(mydata, vars=cc("B1, B2, B3, B4, B5"))
+Alpha(mydata, vars=cc("B6, B7, B8, B9, B10, B11, B12"))
+Alpha(mydata, vars=cc("B13, B14, B15, B16, B17"))
 
-Alpha(data2, varrange="BSI1:BSI18")
-Alpha(data2, varrange="SLE_DisturbingThoughts:SLE_EasilyStartled")
+Alpha(mydata, varrange="A1:A18")
+Alpha(mydata, varrange="B1:B17")
 
-Alpha(data2, varrange="ACE1:ACE10")
+Alpha(mydata, varrange="C1:C10")
 ```
 
 ### Reverse-coded items, with psych::bfi

@@ -80,7 +80,7 @@ tbl2 <-
 library(naniar)
 # Convert the listed variables to factors with mutate() and across()
 dataraw <- dataraw %>%
-  mutate(across(c(Gender, Race, SexOri, Income, Religi, Spirit, Edu, Age, Selfharm, SuicideIdeation, EverAttemptedSuicide, starts_with("ACE")), factor))
+  mutate(across(c(gender, race, income, education, age, starts_with("item")), factor))
 
 # Little's MCAR test assumes multivariate normality, so it is not recommended for skewed data
 NAresult <- mcar_test(dataraw)

@@ -353,8 +353,8 @@ Tidyverse makes R much less painful. It is a collection of packages with utility
 #### Rename variables
 
 - **Variable types:** All
-- **When to use:** Change a variable name from "CTQ" to "ACTQ".
-- **Functions:** dplyr package: `rename(data, ACTQ = CTQ)`
+- **When to use:** Change a variable name from "score" to "total_score".
+- **Functions:** dplyr package: `rename(data, total_score = score)`
 - **Resources:** [dplyr: rename](https://dplyr.tidyverse.org/reference/rename.html)
 
 #### Reshape data: wide to long, or long to wide
@@ -480,7 +480,7 @@ data_list <- Filter(Negate(is.null), data_list)
 # Check data types
 str(data)
 # Check a specific variable in the data frame
-str(data$ACE)
+str(data$score)
 
 # Convert all values to numeric
 dataraw <- as.data.frame(lapply(dataraw, as.numeric))

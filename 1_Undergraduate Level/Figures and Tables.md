@@ -119,8 +119,8 @@ library(gtsummary)
 
 # Merge several gtsummary tables side by side, each with its own spanning header
 tbl_merge(
-  list(SA_table, SI_table, NSSI_table),
-  tab_spanner = c("**SA**", "**SI**", "**NSSI**")
+  list(table_a, table_b, table_c),
+  tab_spanner = c("**Outcome A**", "**Outcome B**", "**Outcome C**")
 )
 ```
 

@@ -54,7 +54,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
 - [Exporting data analysis results](1_Undergraduate%20Level/Figures%20and%20Tables.md)
     - Plotting: ggplot2 package
     - Tables: gtsummary package
-- Data cleaning
+- [Data cleaning](1_Undergraduate%20Level/Data%20Cleaning.md)
     - Handling of missing values: direct deletion, multiple imputation, pros & cons
     - Outliers
 - Questionnaires or cross-sectional research:
