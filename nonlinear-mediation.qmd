@@ -32,8 +32,9 @@ Here, the slope is what we want: it quantifies the rate of change between the va
 
 $$
 \begin{aligned}
-&\text{Power rule:} && f(X) = X^n, \quad f'(X) = nX^{n-1} \\
-&\text{Natural log:} && Y = \ln X \;\Rightarrow\; e^Y = X \;\Rightarrow\; e^Y \frac{dY}{dX} = 1 \;\Rightarrow\; \frac{dY}{dX} = \frac{1}{e^Y} = \frac{1}{X}
+&\text{Power rule:} && f(X) = X^n, \quad f'(X) = nX^{n-1} \\[6pt]
+&\text{Natural log:} && Y = \ln X \;\Rightarrow\; e^Y = X \;\Rightarrow\; e^Y \frac{dY}{dX} = 1 \\[6pt]
+& && \Rightarrow\; \frac{dY}{dX} = \frac{1}{e^Y} = \frac{1}{X}
 \end{aligned}
 $$
 
@@ -41,9 +42,9 @@ The derivative $dY/dX$ is the instantaneous rate of change: the slope of the cur
 
 $$
 \begin{aligned}
-X \to M:&\quad \frac{dM}{dX} = a \\
-\text{Indirect } (X \to M \to Y):&\quad \frac{dM}{dX} \cdot \frac{\partial Y}{\partial M} = ab \\
-\text{Direct } (X \to Y):&\quad \frac{\partial Y}{\partial X} = c' \\
+X \to M:&\quad \frac{dM}{dX} = a \\[6pt]
+\text{Indirect } (X \to M \to Y):&\quad \frac{dM}{dX} \cdot \frac{\partial Y}{\partial M} = ab \\[6pt]
+\text{Direct } (X \to Y):&\quad \frac{\partial Y}{\partial X} = c' \\[6pt]
 \text{Total:}&\quad \frac{dY}{dX} = ab + c'
 \end{aligned}
 $$
@@ -86,9 +87,9 @@ Next, take the derivatives:
 
 $$
 \begin{aligned}
-X \to M:&\quad \frac{dM}{dX} = a_1 + 2a_2X \\
-\text{Indirect:}&\quad \theta = (a_1 + 2a_2X)\,b \\
-\text{Direct:}&\quad \frac{\partial Y}{\partial X} = c_1 + 2c_2X \\
+X \to M:&\quad \frac{dM}{dX} = a_1 + 2a_2X \\[6pt]
+\text{Indirect:}&\quad \theta = (a_1 + 2a_2X)\,b \\[6pt]
+\text{Direct:}&\quad \frac{\partial Y}{\partial X} = c_1 + 2c_2X \\[6pt]
 \text{Total:}&\quad \frac{dY}{dX} = (a_1b + c_1) + 2(a_2b + c_2)X
 \end{aligned}
 $$
@@ -109,9 +110,9 @@ Next, take the derivatives:
 
 $$
 \begin{aligned}
-X \to M:&\quad \frac{dM}{dX} = a_1 + 2a_2X + 3a_3X^2 \\
-\text{Indirect:}&\quad \theta = (a_1 + 2a_2X + 3a_3X^2)\,b \\
-\text{Direct:}&\quad \frac{\partial Y}{\partial X} = c_1 + 2c_2X + 3c_3X^2 \\
+X \to M:&\quad \frac{dM}{dX} = a_1 + 2a_2X + 3a_3X^2 \\[6pt]
+\text{Indirect:}&\quad \theta = (a_1 + 2a_2X + 3a_3X^2)\,b \\[6pt]
+\text{Direct:}&\quad \frac{\partial Y}{\partial X} = c_1 + 2c_2X + 3c_3X^2 \\[6pt]
 \text{Total:}&\quad \frac{dY}{dX} = (a_1b + c_1) + 2(a_2b + c_2)X + 3(a_3b + c_3)X^2
 \end{aligned}
 $$
