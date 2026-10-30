@@ -89,8 +89,9 @@ In the middle and later stages of programming, you will learn mainly by looking 
 - [SEM](structural-equation-modeling.qmd)
     - CFA & EFA
     - Mediation test, bootstrap
+        - [Nonlinear mediation](nonlinear-mediation.qmd)
     - Moderation
-    - Multiple group comparison
+    - [Multiple group comparison](multigroup-analysis.qmd)
 - [Reliability and validity](reliability-and-validity.qmd): Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
 - Longitudinal models
     - Longitudinal SEM

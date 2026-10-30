@@ -87,6 +87,8 @@ See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015
 
 ### Mediation analysis
 
+- **Comment:** For curved (nonlinear) paths, see [Nonlinear Mediation](nonlinear-mediation.qmd).
+
 ### Control variables (covariates)
 
 - **Variable types:** Any
@@ -103,6 +105,8 @@ See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015
 - **Variable types:** Usually categorical (compared with a multigroup model), but continuous variables also work: use them directly in an interaction term rather than splitting them into groups, which loses information.
 
 ### Multigroup comparisons
+
+- **Comment:** Measurement invariance and comparing paths across groups: see [Multigroup Analysis](multigroup-analysis.qmd).
 
 ### Export results
 
