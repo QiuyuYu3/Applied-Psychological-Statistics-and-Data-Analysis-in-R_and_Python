@@ -42,4 +42,4 @@ The manual is not finished. Linked chapters are online; the others are planned.
 
 ## License
 
-[CC BY-NC-SA 4.0](LICENSE): you may share and adapt the material for non-commercial purposes, with attribution and under the same license.
+The text and figures are licensed under [CC BY 4.0](LICENSE): you may share and adapt them with attribution. The code examples are licensed under [MIT](LICENSE-CODE), so you can use them in your own analyses. The quarto-live extension in `_extensions/` is third-party code under its own license.

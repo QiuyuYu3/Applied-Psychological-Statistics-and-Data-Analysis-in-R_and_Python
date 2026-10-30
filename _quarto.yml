@@ -9,6 +9,8 @@ book:
   site-url: https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/
   repo-url: https://github.com/QiuyuYu3/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python
   search: true
+  page-footer:
+    center: "Text and figures [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), code [MIT](https://github.com/QiuyuYu3/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/blob/main/LICENSE-CODE)"
   chapters:
     - index.qmd
     - part: "Undergraduate Level"
