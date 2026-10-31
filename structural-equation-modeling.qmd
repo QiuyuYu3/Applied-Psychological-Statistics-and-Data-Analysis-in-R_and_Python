@@ -16,7 +16,7 @@ format:
 ## Before You Start
 
 - What is SEM, and what does it include?
-    - Note that SEM has two parts: the structural model and the measurement model. Many beginners run into problems with SEM because they did not understand these basic concepts thoroughly at the start. Honestly, I'm too lazy to pin down every academic term myself; as long as you understand them, that's fine.
+    - Note that SEM has two parts: the structural model and the measurement model. Many beginners run into problems with SEM because they did not understand these basic concepts thoroughly at the start.
 - When should you use SEM?
 - What are latent variables, exogenous variables, and endogenous variables?
 - What makes a good structural equation model?
@@ -142,12 +142,12 @@ When you have several models or many items, put the numbers in tables rather tha
     2. Take a single dimension into the SEM instead of putting several dimensions together in a mediation model.
     3. Item parceling (explain why you used this method and how you did it):
         1. The most common way is to use the dimension scores directly; if you want to use item parceling, look up the literature.
-            1. When I first started and didn't know better, I summed all the dimension scores into a total and analyzed it as a first-order latent variable. Later I found out you can't do that, haha. But in a sense, this is also a kind of item parceling.
+            1. When I first started and didn't know better, I summed all the dimension scores into a total and analyzed it as a first-order latent variable. Later I learned this is not correct, although in a sense it is a kind of item parceling.
         2. However, **I strongly recommend using the raw (item-level) data rather than processed data**: if you use averages, you may ignore measurement error and introduce bias (see [Latent vs. Observed Correlation](#latent-vs-observed)).
 5. Scale reliability and validity should already be tested in the pilot study, and then adjusted with the large sample. Remember to handle the reverse-scored items.
 6. Reporting indices: different papers report different indices. You don't need to report all of them, and they don't all need to meet the cutoffs. Some indices are affected by factors such as sample size (e.g., the p-value of the chi-square test); if one doesn't meet the cutoff, explain it in your paper.
 7. Generally, only after a simple mediation model works should you move on to more complex models.
-8. CFA is a must, although you don't have to report it, depending on the length of your paper. If the CFA fails, the model is pretty much unusable...
+8. CFA is a must, although you don't have to report it, depending on the length of your paper. If the CFA does not fit, the model built on it cannot be used.
 9. EFA and CFA must use different samples; they are different things. You can roughly think of the EFA as a pilot study.
 10. If you designed the questionnaire yourself, factor loadings > 0.5 (more leniently, 0.4) are acceptable; for previously validated questionnaires, > 0.6. Look up literature support for these cutoffs. Cheung et al. (2024) review the published rules: 0.4 for interpretation, and at least 0.5, ideally 0.7 (see [Report Results](#report-results)).
 11. If the CFA fit is poor, you may need to delete items or further process the sample:

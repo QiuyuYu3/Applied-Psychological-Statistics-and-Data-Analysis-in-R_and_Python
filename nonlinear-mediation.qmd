@@ -11,7 +11,7 @@ format:
 
 # Nonlinear Mediation
 
-SEM is built on factor analysis and regression, and I'd recommend reviewing regression before you start. Of course it's fine if you don't have a lot of knowledge in this area: from an application standpoint, you just need to understand the indicators and interpret the results.
+SEM is built on factor analysis and regression, and I'd recommend reviewing regression before you start. For applied work, the main thing is to understand the indicators and interpret the results.
 
 This chapter is about mediation models in which the paths between observed variables are curved, for example quadratic (Hayes & Preacher, 2010). In the SEM literature, "nonlinear SEM" often means something else: interactions and quadratic effects of latent variables (for example, latent moderated structural equations, LMS, or `XWITH` in Mplus). That is a different topic.
 

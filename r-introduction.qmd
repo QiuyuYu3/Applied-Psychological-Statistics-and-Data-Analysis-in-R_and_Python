@@ -67,8 +67,8 @@ When you need to work on a project (like a thesis) rather than write a simple sc
 
 1. You can run code chunks individually and view the results, which can also be collapsed.
 2. You can insert charts, websites, LaTeX-formatted mathematical formulas, and more, allowing you to create rich, well-formatted documents that are visually appealing.
-3. Commenting is more convenient (it's good practice to add comments while coding! Otherwise, after some time, you might forget what your own code does).
-4. You can even generate Bookdown format and publish the books you've written. Markdown syntax is very simple!
+3. Commenting is more convenient (comment your code as you write it; otherwise you may later forget what it does).
+4. You can even generate Bookdown format and publish the books you've written. Markdown syntax is simple.
 
 > Format: create an R Markdown file, then add code chunks through the menu at the upper right. A code chunk looks like this:
 >

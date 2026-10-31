@@ -2,7 +2,7 @@
 
 ## About this Manual
 
-For people who are not familiar with coding, I would suggest starting with [JASP](https://jasp-stats.org/): it can help you build up the workflow and reduce pain. When you feel familiar with it, you can transfer to R or Python. JASP is free, open-source software with a graphical interface, and it can do a lot of advanced statistics. Better than SPSS!
+For people who are not familiar with coding, I would suggest starting with [JASP](https://jasp-stats.org/): it can help you build up the workflow and reduce pain. When you feel familiar with it, you can transfer to R or Python. JASP is free, open-source software with a graphical interface, and it can do a lot of advanced statistics.
 
 ![JASP](images/jasp.png)
 
