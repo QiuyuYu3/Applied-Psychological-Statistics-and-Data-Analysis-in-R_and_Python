@@ -13,25 +13,33 @@ book:
     center: "Text and figures [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), code [MIT](https://github.com/QiuyuYu3/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/blob/main/LICENSE-CODE)"
   chapters:
     - index.qmd
-    - part: "Undergraduate Level"
+    - part: "Getting Started with R"
       chapters:
         - r-introduction.qmd
         - example-data.qmd
         - r-basic-operations.qmd
-        - figures-and-tables.qmd
+    - part: "Data Preparation"
+      chapters:
         - data-cleaning.qmd
         - missing-values.qmd
+    - part: "Statistical Tests and Regression"
+      chapters:
         - fundamental-statistics.qmd
         - correlation-and-regression.qmd
-    - part: "Junior Graduate Level"
-      chapters:
         - generalized-linear-model.qmd
+    - part: "Reporting and Visualization"
+      chapters:
+        - figures-and-tables.qmd
+    - part: "Measurement"
+      chapters:
+        - reliability-and-validity.qmd
+    - part: "Structural Equation Modeling"
+      chapters:
         - structural-equation-modeling.qmd
-        - sem-by-hand.qmd
-        - multigroup-analysis.qmd
         - mediation-analysis.qmd
         - nonlinear-mediation.qmd
-        - reliability-and-validity.qmd
+        - multigroup-analysis.qmd
+        - sem-by-hand.qmd
 
 filters:
   - list-table

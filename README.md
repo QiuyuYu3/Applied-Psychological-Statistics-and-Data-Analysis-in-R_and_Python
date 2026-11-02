@@ -15,31 +15,45 @@ For each method, the manual covers when to use it, which R packages and function
 
 The manual is not finished. Linked chapters are online; the others are planned.
 
-### Undergraduate level
+### Getting Started with R
 
 - [R Introduction](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/r-introduction.html): why R, installation, the RStudio interface, data structures, debugging
 - [Example Data](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/example-data.html): the simulated dataset used throughout
 - [R Basic Operations](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/r-basic-operations.html): importing, converting, selecting, reshaping, and merging data
-- [Figures and Tables](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/figures-and-tables.html): plots with ggplot2, tables with gtsummary
+- Planned: loops and functions in R
+
+### Data Preparation
+
 - [Data Cleaning](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/data-cleaning.html): recoding, scale scores, summaries by group, normality checks
 - [Missing Values](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/missing-values.html): describing missingness and multiple imputation with mice
+
+### Statistical Tests and Regression
+
 - [Fundamental Statistics](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/fundamental-statistics.html): summary tables and group comparisons
 - [Correlation and Regression](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/correlation-and-regression.html): correlation tables (regression not written yet)
-- Planned: assumption checks, t-tests and ANOVA (including within-subject designs and post hoc tests), chi-square tests, nonparametric tests, effect sizes and confidence intervals, power analysis, MANOVA
-
-### Junior graduate level
-
 - [Generalized Linear Model](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/generalized-linear-model.html): logistic regression; ordinal and count models planned
+- Planned: assumption checks, t-tests and ANOVA (including within-subject designs and post hoc tests), chi-square tests, nonparametric tests, effect sizes and confidence intervals, power analysis, MANOVA, multilevel modeling, regularized regression and cross-validation (with Python)
+
+### Reporting and Visualization
+
+- [Figures and Tables](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/figures-and-tables.html): plots with ggplot2, tables with gtsummary
+
+### Measurement
+
+- [Reliability and Validity](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/reliability-and-validity.html): Cronbach's alpha with bruceR, types of validity
+- Planned: principal component and factor analysis, common method bias
+
+### Structural Equation Modeling
+
 - [Structural Equation Modeling](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/structural-equation-modeling.html): the workflow from data screening to mediation, estimators, and practical notes
-- [Multigroup Analysis](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/multigroup-analysis.html): measurement invariance and comparing paths across groups
 - [Mediation Analysis](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/mediation-analysis.html): testing indirect effects with the bootstrap, non-significant total effects, and several mediators
 - [Nonlinear Mediation](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/nonlinear-mediation.html): indirect effects when the paths are curved
-- [Reliability and Validity](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/reliability-and-validity.html): Cronbach's alpha with bruceR, types of validity
-- Planned: longitudinal models (longitudinal SEM, latent growth curves, RI-CLPM, time series), latent profile and latent class analysis, principal component and factor analysis, multilevel modeling, Bayesian statistics, meta-analysis, loops and functions in R
+- [Multigroup Analysis](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/multigroup-analysis.html): measurement invariance and comparing paths across groups
+- [SEM by Hand](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/sem-by-hand.html): the implied covariance matrix and ML estimation, in R and Python
 
-### Senior graduate level (planned, with Python)
+### Planned topics
 
-- Regularized regression and cross-validation, psychological network analysis, FDR control, sensitivity analysis, common method bias
+- Longitudinal models (longitudinal SEM, latent growth curves, RI-CLPM, time series), latent profile and latent class analysis, psychological network analysis (with Python), Bayesian statistics, meta-analysis, FDR control, sensitivity analysis
 
 ## License
 

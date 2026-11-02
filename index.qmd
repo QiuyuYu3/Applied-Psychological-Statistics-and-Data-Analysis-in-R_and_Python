@@ -42,7 +42,9 @@ In the middle and later stages of programming, you will learn mainly by looking 
 
 ## Outline & Topics
 
-### Undergraduate Level (Version 1.0)
+Topics without a link are planned. The advanced ones, such as regularized regression and network analysis, will include Python.
+
+### Getting Started with R
 
 - [Introduction: why choose R, installation, interface, and data structures](r-introduction.qmd)
 - [Example data: the simulated dataset used throughout the manual](example-data.qmd)
@@ -52,14 +54,20 @@ In the middle and later stages of programming, you will learn mainly by looking 
         - Merging data, converting variable types, naming variables and labels, and selecting variables
         - Read data from several files and combine data (left and right)
         - Data format: from wide to long
-- [Exporting data analysis results](figures-and-tables.qmd)
-    - Plotting: ggplot2 package
-    - Tables: gtsummary package
+- Control flow and defining functions
+    - `for` loop
+    - `if else`
+
+### Data Preparation
+
 - [Data cleaning](data-cleaning.qmd)
     - [Handling of missing values](missing-values.qmd): direct deletion, multiple imputation, pros & cons
     - Outliers
 - Questionnaires or cross-sectional research:
     - Reverse items, sum, average
+
+### Statistical Tests and Regression
+
 - [Descriptive statistics](fundamental-statistics.qmd#descriptive-statistics): M, SD, frequency, odds
 - Assumption checks
     - Normality testing: univariate and multivariate normality tests
@@ -79,48 +87,54 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Multivariate analysis of variance (MANOVA)
     - Effect sizes and confidence intervals
     - Power analysis (a priori)
-
-### Junior Graduate Level (Version 2.0)
-
 - [Generalized linear model](generalized-linear-model.qmd)
     - Logistic regression
     - Ordinal regression
     - Count models: Poisson, negative binomial
+- Multilevel modeling (MLM)
+- Regularized regression (lasso, ridge) and cross-validation
+
+### Reporting and Visualization
+
+- [Exporting data analysis results](figures-and-tables.qmd)
+    - Plotting: ggplot2 package
+    - Tables: gtsummary package
+
+### Measurement
+
+- [Reliability and validity](reliability-and-validity.qmd): Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
+- Principal component analysis & factor analysis (EFA)
+- Common method biases
+
+### Structural Equation Modeling
+
 - [SEM](structural-equation-modeling.qmd)
-    - CFA & EFA
+    - CFA
     - [Mediation test, bootstrap](mediation-analysis.qmd)
         - [Nonlinear mediation](nonlinear-mediation.qmd)
     - Moderation
     - [Multiple group comparison](multigroup-analysis.qmd)
-- [Reliability and validity](reliability-and-validity.qmd): Cronbach's α, McDonald's ω, convergent, discriminant, and criterion validity
-- Longitudinal models
-    - Longitudinal SEM
-    - Latent growth curve model
-    - Random intercept cross-lagged panel model (RI-CLPM)
-    - Time series analysis
+    - [SEM by hand](sem-by-hand.qmd): the implied covariance matrix and ML estimation, in R and Python
+
+### Longitudinal Models
+
+- Longitudinal SEM
+- Latent growth curve model
+- Random intercept cross-lagged panel model (RI-CLPM)
+- Time series analysis
+
+### Other Topics
+
 - Cluster and discriminant analysis: latent profile analysis (LPA), latent class analysis (LCA)
-- Principal component analysis & factor analysis
-- Bayesian statistics (introduction)
-- Meta-analysis & systematic review
-- Multilevel modeling (MLM)
-- Control flow and defining functions
-    - `for` loop
-    - `if else`
-
-### Senior Graduate Level (Version 3.0)
-
-**This section will include Python.**
-
-- Regularized regression (lasso, ridge) and cross-validation
 - Psychological network analysis
     - Partial correlation networks (Gaussian graphical model, EBICglasso)
     - Accuracy and stability (bootstrap)
     - Network comparison between groups
     - Temporal networks (intensive longitudinal data)
-- Extra
-    - FDR control
-    - Sensitivity analysis
-    - Common method biases
+- Bayesian statistics (introduction)
+- Meta-analysis & systematic review
+- FDR control
+- Sensitivity analysis
 
 ### Structure
 
