@@ -4,14 +4,16 @@ All code in this manual runs on one simulated dataset, so you can run every exam
 
 ## Load the Data
 
-There are two files in the `data` folder:
+There are three files in the `data` folder:
 
 - `mydata.csv`: the raw data, with item-level responses and missing values. Use it for data cleaning, missing values, and reliability.
 - `mydata_scored.csv`: the same data plus scale scores. Use it for the analysis chapters.
+- `mydata_imputed.csv`: `mydata_scored.csv` with the missing values filled in, the first of five datasets imputed with mice. Use it only where a method needs complete data, such as [SEM by Hand](sem-by-hand.qmd); a real analysis uses all imputed datasets ([Missing Values](missing-values.qmd)).
 
 ```r
 mydata <- read.csv("data/mydata.csv")
 mydata_scored <- read.csv("data/mydata_scored.csv")
+mydata_imputed <- read.csv("data/mydata_imputed.csv")
 ```
 
 ## Codebook
@@ -43,7 +45,7 @@ mydata_scored <- read.csv("data/mydata_scored.csv")
 
 ## Simulation Code
 
-Run this from the project folder to recreate both files. `set.seed()` makes the result the same every time.
+Run this from the project folder to recreate all three files. `set.seed()` makes the result the same every time.
 
 ```r
 library(MASS) # mvrnorm()
@@ -130,4 +132,25 @@ mydata_scored$B_total <- score(mydata_scored[, paste0("B", 1:17)])
 mydata_scored$C_total <- score(mydata_scored[, paste0("C", 1:10)])
 
 write.csv(mydata_scored, "data/mydata_scored.csv", row.names = FALSE)
+
+# Imputed version: the first of five imputed datasets, for methods that need complete data
+library(mice)
+to_impute <- mydata_scored[, c("age", "gender", "race", "income", "education", "marital", "group",
+                               colnames(A), colnames(B), colnames(C), "y1", "y2", "y3")]
+to_impute$gender <- factor(to_impute$gender)
+imp <- mice(to_impute, m = 5, maxit = 20, method = "pmm", seed = 2024, printFlag = FALSE)
+mydata_imputed <- mydata_scored
+mydata_imputed[names(to_impute)] <- complete(imp, 1)
+mydata_imputed$gender <- as.character(mydata_imputed$gender)
+mydata_imputed$A_s1 <- score(mydata_imputed[, paste0("A", 1:6)])
+mydata_imputed$A_s2 <- score(mydata_imputed[, paste0("A", 7:12)])
+mydata_imputed$A_s3 <- score(mydata_imputed[, paste0("A", 13:18)])
+mydata_imputed$A_total <- score(mydata_imputed[, paste0("A", 1:18)])
+mydata_imputed$B_s1 <- score(mydata_imputed[, paste0("B", 1:5)])
+mydata_imputed$B_s2 <- score(mydata_imputed[, paste0("B", 6:12)])
+mydata_imputed$B_s3 <- score(mydata_imputed[, paste0("B", 13:17)])
+mydata_imputed$B_total <- score(mydata_imputed[, paste0("B", 1:17)])
+mydata_imputed$C_total <- score(mydata_imputed[, paste0("C", 1:10)])
+
+write.csv(mydata_imputed, "data/mydata_imputed.csv", row.names = FALSE)
 ```

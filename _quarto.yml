@@ -27,6 +27,7 @@ book:
       chapters:
         - generalized-linear-model.qmd
         - structural-equation-modeling.qmd
+        - sem-by-hand.qmd
         - multigroup-analysis.qmd
         - mediation-analysis.qmd
         - nonlinear-mediation.qmd

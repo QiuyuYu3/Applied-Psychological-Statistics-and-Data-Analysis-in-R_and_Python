@@ -5,6 +5,7 @@ format:
     webr:
       packages:
         - lavaan
+        - psych
       resources:
         - data/mydata_scored.csv
 ---
@@ -89,7 +90,7 @@ $$
 
 For items on two different factors, the covariance is $\lambda_i \lambda_j \psi_{12}$, where $\psi_{12}$ is the covariance of the two factors. The estimator looks for the parameter values that bring the implied matrix as close as possible to the covariance matrix in the data, and the χ² test asks whether the difference that is left is larger than chance. A non-significant χ² (p > .05) therefore means that there is no evidence that the model misfits. It does not prove the model right, and in large samples even trivial differences are significant (Note 6).
 
-The degrees of freedom (df) are the pieces of information in the data minus the number of free parameters. With $p$ items, the data give $p(p + 1)/2$ variances and covariances plus $p$ means. A factor with five items gives $15 + 5 = 20$ pieces of information. The model estimates 4 loadings (the first is fixed at 1), 1 factor variance, 5 intercepts, and 5 residual variances, 15 in all, so df = $20 - 15 = 5$. A factor with three items has df = $9 - 9 = 0$: the model reproduces the data exactly, and its fit cannot be tested on its own. [Under the Hood](#implied-covariance) checks these numbers in R.
+The degrees of freedom (df) are the pieces of information in the data minus the number of free parameters. With $p$ items, the data give $p(p + 1)/2$ variances and covariances plus $p$ means. A factor with five items gives $15 + 5 = 20$ pieces of information. The model estimates 4 loadings (the first is fixed at 1), 1 factor variance, 5 intercepts, and 5 residual variances, 15 in all, so df = $20 - 15 = 5$. A factor with three items has df = $9 - 9 = 0$: the model reproduces the data exactly, and its fit cannot be tested on its own. [Under the Hood](#implied-covariance) checks these numbers in R, and [SEM by Hand](sem-by-hand.qmd) derives the implied covariance matrix in matrix form and estimates the model step by step in R and Python.
 
 ## Basic Procedure
 
@@ -117,6 +118,18 @@ The degrees of freedom (df) are the pieces of information in the data minus the 
 
 ## Report Results
 
+A results section follows the order of the analysis:
+
+1. Data screening: the univariate and multivariate normality of the items, which decides the estimator (step 3 of the Basic Procedure).
+2. Methods: the software and estimator, how missing data were handled, how each factor was identified (the loading fixed at 1 and the factor means fixed at 0), that the residual covariances were fixed at 0, how the effects were tested (the type of bootstrap CI and the number of draws, and that an effect counts as significant when its 95% CI excludes 0), and the fit criteria with their source.
+3. Measurement models, one per factor: fit, loadings, R², and whether the hypothesis about the factor was supported.
+4. Structural model: fit, each path with its estimate, SE, 95% CI, and standardized coefficient (β), and the R² of each endogenous factor.
+5. Indirect and total effects with their 95% CIs.
+
+With several models or many items, put the numbers in tables and refer to them in the text. The [full SEM example](#example-full-sem) below goes through all five steps.
+
+### Fit Criteria
+
 For a CFA, or the measurement part of any SEM, report the χ² test with its df and p-value, CFI, TLI, RMSEA with its 90% CI, and SRMR. Commonly used cutoffs for a good fit:
 
 | Index | Good fit | Source |
@@ -132,18 +145,120 @@ Hu and Bentler (1999) proposed values close to these, not hard rules. With the M
 
 A standardized loading of .70 means that the factor explains 49% (.70²) of the item's variance, about half. Cheung et al. (2024) also take sampling error into account: they look at the upper limit of the 90% CI of each standardized loading. If it is below .50, the item is a major concern; from .50 to below .70, a minor concern; at .70 or above, no concern.
 
+### A CFA
+
 The two-factor model in [CFA syntax](#cfa-syntax) could be reported like this:
 
 > The measurement model was estimated with robust maximum likelihood (MLR), and missing data were handled with full information maximum likelihood (FIML). The first loading of each factor was fixed at 1 and the factor means at 0. The model fit the data well (Hu & Bentler, 1999), χ²(43) = 54.15, *p* = .119, CFI = .993, TLI = .991, RMSEA = .024, 90% CI [.000, .041], SRMR = .032. All standardized loadings were significant (*p*s < .001) and ranged from .65 to .71, and the upper limit of each 90% CI was at least .70 (Cheung et al., 2024). The factors explained 42% to 50% of the variance of each item. FA1 and FB1 were correlated, *r* = .33, 95% CI [.23, .43].
 
-When you have several models or many items, put the numbers in tables rather than in the text:
-
-- Fit table: one row per model (for example, each factor on its own, then the full measurement model), with χ², df, χ²/df, p, RMSEA and its 90% CI, SRMR, CFI, and TLI.
-- Loading table: for each item, the unstandardized loading with its SE, the standardized loading, and R². Mark the loadings fixed at 1 for identification with a dash in the SE column, and give the factor variances and covariances at the bottom.
-
 [Numbers for the Tables](#numbers-for-the-tables) collects these values in R. A path diagram with the standardized estimates can go in the paper or its appendix:
 
 ![Standardized solution of the two-factor model. Straight arrows: loadings. Curved arrow between the factors: their correlation. Curved arrows under the items: residual variances. All estimates *p* < .001.](images/sem-cfa-path-diagram.png)
+
+If two factors are not significantly correlated, report the covariance and the correlation with its 95% CI in the same way, and say that the CI includes 0. The factor correlation is corrected for measurement error ([Latent vs. Observed Correlation](#latent-vs-observed)), so a non-significant correlation is not the result of attenuation by unreliable items, as it could be with sum scores.
+
+A factor with three items is just-identified (df = 0; see [How CFA Estimates the Model](#how-cfa-estimates-the-model)), and its fit indices show a perfect fit by construction (χ² = 0, CFI = 1, RMSEA = 0). Write, for example, "The model was just-identified because the factor has only three items, so its fit could not be evaluated", report the loadings and R², and evaluate its fit as part of the full measurement or structural model.
+
+### A Full SEM {#example-full-sem}
+
+Suppose the hypotheses are that (1a to 1c) the items of FA1, FB1, and FB2 each form a well-fitting factor; (2) FA1 predicts FB1 (path *a*); (3) FB1 predicts FB2 (path *b*); (4) FA1 predicts FB2 (path *c'*); and (5) FA1 has an indirect effect on FB2 through FB1. Each measurement model is tested on its own, then the structural model. [Full SEM](#full-sem-syntax) in Syntax gives the code and the numbers.
+
+> The measurement and structural models were estimated in R with the lavaan package. Univariate normality of the items was tested with the Shapiro-Wilk test and multivariate normality with Mardia's test. All items deviated from normality, *W*s = .914 to .917, *p*s < .001, with skewness from −0.04 to 0.15 and kurtosis from −0.93 to −0.69 (Table 1). Mardia's multivariate skewness was not significant, *p* = .999, but multivariate kurtosis was, *z* = −4.18, *p* < .001. The models were therefore estimated with robust maximum likelihood (MLR), and missing data were handled with full information maximum likelihood (FIML). The first loading of each factor was fixed at 1 and the factor means at 0, all item intercepts were estimated freely, and residual covariances were fixed at 0. The paths and the indirect and total effects were tested with 5,000 percentile bootstrap samples (ML with FIML), and an effect was considered significant when its 95% confidence interval (CI) excluded zero. Model fit was evaluated against χ²/*df* ≤ 3, CFI and TLI ≥ .95, RMSEA ≤ .06, and SRMR ≤ .08 (Hu & Bentler, 1999; Schreiber, 2008).
+>
+> **Hypothesis 1a.** The measurement model of FA1 fit the data well (Table 2). The χ² test was significant, χ²(9) = 17.89, *p* = .037, but the other indices met the criteria, χ²/*df* = 1.99, CFI = .990, TLI = .984, RMSEA = .046, 90% CI [.012, .077], SRMR = .020. The factor variance was significant (ψ = 0.647, *SE* = 0.073, *p* < .001), indicating individual differences in FA1. With the loading of A1 fixed at 1, the unstandardized loadings of A2 to A6 ranged from 0.960 to 1.055 (*p*s < .001), and the standardized loadings of all six items from .665 to .713 (Table 3); the upper limit of each 90% CI was at least .70 (Cheung et al., 2024). The standardized residual variances ranged from .491 to .558, so 49.1% to 55.8% of the variance of each item was unique to it, measurement error and item-specific variance rather than FA1. Correspondingly, *R*² ranged from .442 to .509: FA1 explained 44.2% to 50.9% of the variance of each item. Hypothesis 1a was supported.
+>
+> **Hypotheses 1b and 1c.** The models of FB1, χ²(5) = 4.37, *p* = .497, and FB2, χ²(14) = 8.15, *p* = .881, also fit the data well (Table 2). Their standardized loadings ranged from .648 to .671 and from .629 to .678 (*p*s < .001; Table 3). For FB1, the upper limit of each 90% CI was at least .70. For FB2, the upper limits for B6, B7, and B12 were between .50 and .70 (.681, .699, and .697), a minor concern (Cheung et al., 2024). FB1 explained 42.0% to 45.1%, and FB2 39.5% to 46.0%, of the variance of each item. Hypotheses 1b and 1c were supported.
+>
+> **Hypotheses 2 to 4.** The structural model fit the data well (Table 2), χ²(132) = 156.25, *p* = .073, χ²/*df* = 1.18, CFI = .991, TLI = .989, RMSEA = .020, 90% CI [.000, .031], SRMR = .035, with standardized loadings from .635 to .706 (*p*s < .001). FA1 positively predicted FB1 (estimate = 0.314, *SE* = 0.057, 95% CI [0.208, 0.433], β = .333, *p* < .001; Table 4), supporting Hypothesis 2. FB1 positively predicted FB2 (estimate = 0.493, *SE* = 0.069, 95% CI [0.369, 0.636], β = .496, *p* < .001), supporting Hypothesis 3. FA1 also positively predicted FB2 (estimate = 0.160, *SE* = 0.051, 95% CI [0.061, 0.262], β = .170, *p* = .002), supporting Hypothesis 4. *R*² = .111 for FB1 and .330 for FB2.
+>
+> **Hypothesis 5.** The indirect effect of FA1 on FB2 through FB1 was positive and significant (indirect effect = 0.155, *SE* = 0.032, 95% CI [0.099, 0.224], β = .165). The total effect was 0.315 (95% CI [0.214, 0.426], β = .335; Table 4). Hypothesis 5 was supported.
+
+**Table 1**
+
+*Univariate Normality of the Items*
+
+| Item | Skewness | Kurtosis | *W* | *p* |
+|---|---|---|---|---|
+| A1 | −0.034 | −0.819 | .916 | < .001 |
+| A2 | −0.002 | −0.879 | .915 | < .001 |
+| A3 | 0.022 | −0.880 | .916 | < .001 |
+| A4 | 0.060 | −0.778 | .917 | < .001 |
+| A5 | 0.005 | −0.837 | .916 | < .001 |
+| A6 | −0.011 | −0.933 | .915 | < .001 |
+| B1 | 0.100 | −0.738 | .916 | < .001 |
+| B2 | 0.017 | −0.849 | .916 | < .001 |
+| B3 | 0.074 | −0.804 | .916 | < .001 |
+| B4 | 0.024 | −0.812 | .917 | < .001 |
+| B5 | 0.019 | −0.850 | .917 | < .001 |
+| B6 | 0.050 | −0.907 | .915 | < .001 |
+| B7 | 0.027 | −0.894 | .915 | < .001 |
+| B8 | 0.025 | −0.693 | .917 | < .001 |
+| B9 | −0.039 | −0.878 | .915 | < .001 |
+| B10 | 0.152 | −0.779 | .914 | < .001 |
+| B11 | −0.020 | −0.804 | .917 | < .001 |
+| B12 | −0.009 | −0.825 | .916 | < .001 |
+
+*Note.* *N* = 500; each item was tested on the 482 to 494 cases that answered it. Kurtosis is the excess kurtosis (0 for a normal distribution). *W* = Shapiro-Wilk statistic. Mardia's test (*n* = 336 complete cases): multivariate skewness *p* = .999; multivariate kurtosis *z* = −4.18, *p* < .001.
+
+**Table 2**
+
+*Model Fit Indices of the Measurement and Structural Models*
+
+| Model | χ² | *df* | χ²/*df* | *p* | RMSEA | RMSEA 90% CI | SRMR | CFI | TLI |
+|---|---|---|---|---|---|---|---|---|---|
+| FA1 | 17.887 | 9 | 1.987 | .037 | .046 | [.012, .077] | .020 | .990 | .984 |
+| FB1 | 4.371 | 5 | 0.874 | .497 | .000 | [.000, .058] | .012 | 1.000 | 1.002 |
+| FB2 | 8.150 | 14 | 0.582 | .881 | .000 | [.000, .023] | .013 | 1.000 | 1.009 |
+| Structural model | 156.250 | 132 | 1.184 | .073 | .020 | [.000, .031] | .035 | .991 | .989 |
+
+*Note.* *N* = 500. Scaled χ² and robust RMSEA, CFI, and TLI (MLR). TLI can exceed 1 when χ² is smaller than its df.
+
+**Table 3**
+
+*Factor Loadings of the Measurement Models*
+
+| Model | Item | Estimate | *SE* | *p* | β | *R*² |
+|---|---|---|---|---|---|---|
+| **FA1** | | | | | | |
+| | A1 | 1.000 | – | – | .681 | .464 |
+| | A2 | 0.960 | 0.073 | < .001 | .665 | .442 |
+| | A3 | 1.020 | 0.071 | < .001 | .702 | .492 |
+| | A4 | 0.997 | 0.071 | < .001 | .696 | .484 |
+| | A5 | 1.055 | 0.074 | < .001 | .713 | .509 |
+| | A6 | 1.004 | 0.074 | < .001 | .681 | .464 |
+| | FA1 (ψ) | 0.647 | 0.073 | < .001 | | |
+| **FB1** | | | | | | |
+| | B1 | 1.000 | – | – | .651 | .424 |
+| | B2 | 1.042 | 0.090 | < .001 | .671 | .451 |
+| | B3 | 1.015 | 0.093 | < .001 | .671 | .451 |
+| | B4 | 1.009 | 0.086 | < .001 | .648 | .420 |
+| | B5 | 1.033 | 0.089 | < .001 | .652 | .425 |
+| | FB1 (ψ) | 0.557 | 0.075 | < .001 | | |
+| **FB2** | | | | | | |
+| | B6 | 1.000 | – | – | .629 | .395 |
+| | B7 | 1.031 | 0.080 | < .001 | .650 | .423 |
+| | B8 | 1.001 | 0.080 | < .001 | .653 | .426 |
+| | B9 | 1.063 | 0.079 | < .001 | .678 | .460 |
+| | B10 | 1.032 | 0.084 | < .001 | .650 | .423 |
+| | B11 | 1.028 | 0.078 | < .001 | .652 | .425 |
+| | B12 | 1.019 | 0.077 | < .001 | .646 | .417 |
+| | FB2 (ψ) | 0.543 | 0.068 | < .001 | | |
+
+*Note.* Estimate = unstandardized loading or factor variance (ψ); β = standardized loading. The first loading of each factor was fixed at 1 for identification.
+
+**Table 4**
+
+*Paths and Effects of the Structural Model*
+
+| Path | Estimate | *SE* | *z* | *p* | LLCI | ULCI | β |
+|---|---|---|---|---|---|---|---|
+| FA1 → FB1 (*a*) | 0.314 | 0.057 | 5.476 | < .001 | 0.208 | 0.433 | .333 |
+| FB1 → FB2 (*b*) | 0.493 | 0.069 | 7.145 | < .001 | 0.369 | 0.636 | .496 |
+| FA1 → FB2 (*c'*, direct effect) | 0.160 | 0.051 | 3.114 | .002 | 0.061 | 0.262 | .170 |
+| FA1 → FB1 → FB2 (indirect effect) | 0.155 | 0.032 | 4.835 | < .001 | 0.099 | 0.224 | .165 |
+| Total effect | 0.315 | 0.054 | 5.802 | < .001 | 0.214 | 0.426 | .335 |
+
+*Note.* Estimate = unstandardized estimate; β = standardized estimate. *SE*, *z*, *p*, and the lower and upper limits of the 95% percentile CI (LLCI, ULCI) are from 5,000 bootstrap draws.
 
 - [Joel Collier: How to present Structural Equation Modeling results in a journal (YouTube)](https://www.youtube.com/watch?v=kEuxOwTWKPA)
 
@@ -476,6 +591,113 @@ MODEL:
 With missing data, Mplus uses FIML by default. `STANDARDIZED` prints the STDYX solution, which matches lavaan's `Std.all`, and R-SQUARE; `TECH1` numbers every free parameter, so you can check what Mplus estimated. If you need lavaan's results to match Mplus output as closely as possible, add `mimic = "Mplus"` to `cfa()`.
 
 For the lavaan and Mplus operators side by side, see the [quick reference](#lavaan-syntax) at the start of this section.
+
+### Full SEM {#full-sem-syntax}
+
+The code for the [full SEM example](#example-full-sem) in Report Results. FA1 predicts FB1 (path *a*), and FB1 and FA1 predict FB2 (paths *b* and *c'*), so FB1 mediates the effect of FA1 on FB2. In the simulated data the factors are only correlated, without causal paths, which is enough for an example. [SEM by Hand](sem-by-hand.qmd) estimates this model step by step.
+
+#### Normality of the Items
+
+```{webr}
+#| autorun: true
+library(psych)
+items <- mydata[, c(paste0("A", 1:6), paste0("B", 1:12))]
+# skewness, kurtosis, and Shapiro-Wilk test of each item
+normality <- data.frame(
+  skew = sapply(items, skew),
+  kurtosis = sapply(items, kurtosi),
+  W = sapply(items, function(x) shapiro.test(x)$statistic),
+  p = sapply(items, function(x) shapiro.test(x)$p.value)
+)
+round(normality, 3)
+# Mardia's multivariate skewness and kurtosis, on complete cases
+mardia(items, na.rm = TRUE, plot = FALSE)
+```
+
+`kurtosi()` gives the excess kurtosis, which is 0 for a normal distribution. Each item is tested on the cases that answered it; `mardia()` keeps only the cases that answered all 18 items. These are the numbers in Table 1.
+
+#### Measurement Models
+
+```{webr}
+#| autorun: true
+models <- list(
+  FA1 = 'FA1 =~ A1 + A2 + A3 + A4 + A5 + A6',
+  FB1 = 'FB1 =~ B1 + B2 + B3 + B4 + B5',
+  FB2 = 'FB2 =~ B6 + B7 + B8 + B9 + B10 + B11 + B12'
+)
+fits <- lapply(models, cfa, data = mydata,
+               estimator = "MLR", missing = "fiml")
+
+loading_table <- function(fit) {
+  est <- parameterEstimates(fit)
+  std <- standardizedSolution(fit, level = 0.90)
+  # loadings, then the factor variance (psi)
+  rows <- est$op == "=~" | (est$op == "~~" & est$lhs %in% lavNames(fit, "lv"))
+  out <- data.frame(
+    item = est$rhs[rows], b = est$est[rows], se = est$se[rows],
+    p = est$pvalue[rows], beta = std$est.std[rows],
+    beta_ci_upper = std$ci.upper[rows],
+    r2 = lavInspect(fit, "rsquare")[est$rhs[rows]],
+    row.names = NULL
+  )
+  out[, -1] <- round(out[, -1], 3)
+  out
+}
+lapply(fits, loading_table)
+```
+
+These are the numbers in Table 3. The last row of each table is the factor variance ψ. The standardized residual variance θ of each item is 1 − R².
+
+#### Structural Model
+
+```{webr}
+#| autorun: true
+model_sem <- '
+FA1 =~ A1 + A2 + A3 + A4 + A5 + A6
+FB1 =~ B1 + B2 + B3 + B4 + B5
+FB2 =~ B6 + B7 + B8 + B9 + B10 + B11 + B12
+FB1 ~ a*FA1
+FB2 ~ b*FB1 + cp*FA1
+ind := a*b
+total := cp + a*b
+'
+fit_sem <- sem(model_sem, data = mydata,
+               estimator = "MLR", missing = "fiml")
+summary(fit_sem, fit.measures = TRUE, standardized = TRUE,
+        rsquare = TRUE)
+```
+
+```{webr}
+#| autorun: true
+# fit of each measurement model and of the structural model
+fit_cols <- c("chisq.scaled", "df", "pvalue.scaled", "rmsea.robust",
+              "rmsea.ci.lower.robust", "rmsea.ci.upper.robust",
+              "srmr", "cfi.robust", "tli.robust")
+round(t(sapply(c(fits, structural = fit_sem), fitMeasures, fit_cols)), 3)
+
+# standardized paths and effects, and R-squared of FB1 and FB2
+std_sem <- standardizedSolution(fit_sem)
+std_sem[std_sem$op %in% c("~", ":="), c("label", "est.std")]
+lavInspect(fit_sem, "rsquare")[c("FB1", "FB2")]
+```
+
+The first table gives Table 2, and the standardized values give the β column of Table 4.
+
+#### Bootstrap Confidence Intervals
+
+The 95% CIs of the paths and effects come from a percentile bootstrap (see [Mediation Analysis](mediation-analysis.qmd#testing-the-indirect-effect)). lavaan does not bootstrap with MLR, so this fit uses ML with FIML; ML and MLR give the same estimates. With 1,000 draws it takes about 2 minutes, so this part does not run in the browser; run it in R on your computer:
+
+```r
+set.seed(2024)
+# 5,000 to 10,000 draws are recommended; 1,000 keeps the example fast
+fit_boot <- sem(model_sem, data = mydata, missing = "fiml",
+                se = "bootstrap", bootstrap = 1000)
+# estimates, bootstrap SEs, and percentile CIs
+est_boot <- parameterEstimates(fit_boot, boot.ci.type = "perc")
+est_boot[est_boot$op %in% c("~", ":="), ]
+```
+
+These are the estimates, *SE*, *z*, *p*, and CI columns of Table 4. Table 4 comes from the same code with 5,000 draws, so its SEs and CIs differ slightly from a run with 1,000; the estimates are the same.
 
 ## Resources & References
 
