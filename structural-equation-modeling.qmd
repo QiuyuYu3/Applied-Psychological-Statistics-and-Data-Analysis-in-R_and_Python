@@ -24,6 +24,21 @@ format:
 
 The procedures and indices discussed below (anything involving numbers) should be backed by the literature. Remember to cite it when you write your paper.
 
+### Key Terms
+
+- **Exogenous variable** (independent variable, predictor): a variable that no other variable in the model predicts. In a path diagram, no single-headed arrow points to it.
+- **Endogenous variable** (dependent variable, outcome, criterion): a variable that at least one other variable predicts. A mediator is endogenous, although it also predicts other variables.
+- **Observed variable** (manifest variable, indicator): a variable in your data, such as a questionnaire item or a sum score.
+- **Latent variable** (factor, construct): a variable that is not measured directly and is defined by its indicators, such as depression measured by the items of a depression scale (Note 1).
+- **Measurement model**: how each latent variable relates to its indicators. On its own, it is a CFA.
+- **Structural model**: the regressions among the latent variables, and between them and other observed variables. A structural model with observed variables only is a path analysis.
+- **Path diagram**: the model drawn as a figure. Rectangles are observed variables, ovals are latent variables, single-headed arrows are regressions or loadings, and double-headed arrows are variances or covariances (see the figure in [Report Results](#report-results)).
+- **Specification**: deciding which parameters are free (estimated from the data) and which are fixed (set to a value, usually 0 or 1). Every arrow you leave out of the diagram fixes a parameter at 0. No model fits the data perfectly; the aim is a model that fits well and makes theoretical sense.
+- **Identification**: whether the free parameters have a unique solution. The data must give at least as many pieces of information as there are free parameters (df ≥ 0; see [How CFA Estimates the Model](#how-cfa-estimates-the-model)), and each latent variable needs a fixed scale. df ≥ 0 is necessary but not sufficient.
+- **Model fit**: how close the model-implied covariance matrix is to the observed one, summarized by fit indices such as χ², CFI, TLI, RMSEA, and SRMR ([Report Results](#report-results)).
+- **Wald test and score test**: the Wald test asks whether fixing or constraining free parameters (for example, setting a path to 0, or two loadings equal) would make the fit significantly worse; in lavaan, `lavTestWald()`. The score test, also called the Lagrange multiplier (LM) test, asks whether freeing fixed parameters would make the fit significantly better; in lavaan, `lavTestScore()`. A modification index is the score test for one fixed parameter (step 7 of the Basic Procedure).
+- **Size of a path**: for standardized path coefficients, the benchmarks Cohen (1988) gave for correlations are often used: about .10 is small, .30 medium, and .50 large.
+
 ### Parameters of a CFA Model
 
 A confirmatory factor analysis (CFA) is the measurement model on its own: each latent variable (factor) is measured by several items, and the factors may correlate. The table lists its parameters, with F for a factor and x for an item.
@@ -93,7 +108,7 @@ The degrees of freedom (df) are the pieces of information in the data minus the 
 7. Model modification:
     1. Look at the modification indices (MI). When an MI is above 3.84 (the critical chi-square value with 1 df at p < .05), you can add a residual correlation, usually between observed variables within the same factor. Because this is data-driven, it is best to have theoretical support. Don't follow every MI: stop once the fit indices are acceptable, otherwise the model becomes saturated. Mention these modifications in your paper. ~~Most people just don't explain why they made them (after all, they are data-driven).~~
     2. Then keep revising the model: change some paths based on your theory, and compare the new model with the original one.
-8. Test mediation:
+8. Test mediation (details and code in [Mediation Analysis](mediation-analysis.qmd)):
     1. The Sobel test assumes the indirect effect is normally distributed, which is rarely true because the product of two coefficients is usually skewed, so bootstrapping is now the common choice. 5,000 resamples are common and 10,000 are recommended, depending on how powerful your computer is.
         1. Judge significance by the 95% CI rather than the p-value: the effect is significant when the confidence interval does not include 0.
     2. The total effect can be masked (for example, by suppression), so it may be non-significant. I don't recommend leaning heavily on terms like "full mediation" and "partial mediation". Highly recommended reading:
@@ -136,7 +151,9 @@ When you have several models or many items, put the numbers in tables rather tha
 
 1. Latent vs. observed variables: observed variables are the individual items on the questionnaire, and a latent variable is your operationalized construct, the variable you want to study. For example, if I want to study the severity of depression, that is an abstract concept; you need to make it operational, that is, measure it with a scale (or by other means).
 2. Don't be purely data-driven: SEM needs strong theoretical support. If you are purely data-driven, the discussion will be hard to write.
-3. Use WLSMV for categorical variables.
+3. Use WLSMV for categorical (ordinal or binary) variables: declare them with `ordered =`, and lavaan uses WLSMV by default.
+    1. WLSMV estimates the model with diagonally weighted least squares (DWLS) and adds robust standard errors and a mean- and variance-adjusted χ². `estimator = "DWLS"` gives the same estimates and standard errors, but only the unadjusted χ², so report the WLSMV test.
+    2. WLSMV and DWLS have no likelihood, so there is no AIC or BIC (see [Model comparison](#model-comparison)).
 4. When the model is too complex and the fit is not acceptable:
     1. Simplify your model. A more complex model is not necessarily better; it has to make sense.
     2. Take a single dimension into the SEM instead of putting several dimensions together in a mediation model.
@@ -144,6 +161,8 @@ When you have several models or many items, put the numbers in tables rather tha
         1. The most common way is to use the dimension scores directly; if you want to use item parceling, look up the literature.
             1. When I first started and didn't know better, I summed all the dimension scores into a total and analyzed it as a first-order latent variable. Later I learned this is not correct, although in a sense it is a kind of item parceling.
         2. However, **I strongly recommend using the raw (item-level) data rather than processed data**: if you use averages, you may ignore measurement error and introduce bias (see [Latent vs. Observed Correlation](#latent-vs-observed)).
+        3. A composite of the subscales (the sum or mean of the subscale scores, or of the subscale factors) and a second-order factor are not interchangeable. A second-order factor rests on assumptions about the covariances of the first-order factors; a composite does not, and its correlations with other variables can differ a lot from those of the second-order factor. A composite also has to mean something: for a profile-type measure, such as the six interest dimensions of Holland's RIASEC model, the information is in the profile and a total says little (Rose et al., 2019, pp. 13-14).
+        4. Factor scores, saved from a CFA and used as observed variables, are another option when the full model is too complex to converge. They are estimates that still contain measurement error. In simulations of hierarchical models, they estimated correlations with an outcome about as accurately as the full SEM when the indicators were continuous, but tended to underestimate them when the indicators were binary (Williams et al., 2025).
 5. Scale reliability and validity should already be tested in the pilot study, and then adjusted with the large sample. Remember to handle the reverse-scored items.
 6. Reporting indices: different papers report different indices. You don't need to report all of them, and they don't all need to meet the cutoffs. Some indices are affected by factors such as sample size (e.g., the p-value of the chi-square test); if one doesn't meet the cutoff, explain it in your paper.
 7. Generally, only after a simple mediation model works should you move on to more complex models.
@@ -158,8 +177,9 @@ When you have several models or many items, put the numbers in tables rather tha
     1. A second-order factor model needs to go back to theory: you can only fit a higher-order model when the total of the subscales (dimensions) is meaningful. For example, the dimensions of a personality scale are theoretically uncorrelated, so a second-order model doesn't work and their total is meaningless; in that case, take each dimension (depending on your hypotheses) into the SEM separately.
     2. A second-order factor needs three or more first-order factors; with only two, extra constraints are needed (such as fixing loadings). The same goes for items: for a CFA, each factor should have three or more items.
 13. Variables don't necessarily need to be correlated.
-14. Some situations, such as a non-significant total effect or path coefficients greater than 1 or less than -1, are normal, and your software won't report an error. But you need to look at them together with R² and the 95% CI.
-    1. Hayes, A. F. (2009). Beyond Baron and Kenny: Statistical mediation analysis in the new millennium. *Communication Monographs*, *76*(4), 408-420. https://doi.org/10.1080/03637750903310360
+14. Some situations, such as a non-significant total effect or standardized path coefficients greater than 1 or less than -1, can happen, and your software won't report an error. But you need to look at them together with R² and the 95% CI.
+    1. A non-significant total effect does not rule out an indirect effect (Hayes, 2009); see [Mediation Analysis](mediation-analysis.qmd#when-the-total-effect-is-not-significant).
+    2. A standardized coefficient beyond ±1 is not an error. It occurs most readily when the predictors are highly correlated (multicollinearity), and it is not by itself a reason to change the model, although its square can then no longer be read as the share of variance that the predictor explains (Deegan, 1978, pp. 886-887). Suppression among the predictors, or a model that is too complex for the sample size, can also produce one. Check the correlations among the predictors.
 
 See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015). Mediation analysis with intermediate confounding: Structural equation modeling viewed through the causal inference lens. *American Journal of Epidemiology*, *181*(1), 64-80. https://doi.org/10.1093/aje/kwu239
 
@@ -177,9 +197,25 @@ See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015
 
 ### Path analysis
 
+- **Functions:** lavaan, `sem()`, with regressions written as `y ~ x` (see the [quick reference](#lavaan-syntax)).
+- **Comment:** With a binary exogenous predictor such as gender, report `standardizedSolution(fit, type = "std.nox")`. It standardizes every variable except the exogenous observed ones, so the coefficient is the difference between the two groups in standard deviations of the outcome. A fully standardized coefficient (`Std.all`) would be per standard deviation of a 0/1 variable, which has no clear meaning; for indirect effects, see Hayes (2009, p. 417).
+
+### Multiple outcomes
+
+- **Variable types:** Any
+- **When to use:** The same predictors are expected to affect several outcomes, for example X → M → Y1 and X → M → Y2.
+- **Comment:**
+  - Put the outcomes in one model rather than fitting one model per outcome. `sem()` then frees the residual covariance of outcomes that predict nothing else, so the model estimates how strongly the outcomes are related after the predictors are taken into account (their partial correlation).
+  - In one model you can test several parameters at once, such as all paths to both outcomes (`lavTestWald()`), instead of running a separate test per outcome, which limits the number of tests. You can also compare a predictor's effect on the two outcomes by labeling both paths and defining their difference with `:=`; compare raw coefficients only when the outcomes are on the same scale.
+  - If the outcomes are unrelated and answer separate questions, separate models are fine.
+- **Resources:** [Cross Validated: Does adding more than 1 dependent variable to SEM have purpose other than to control for correlation between dependent variables?](https://stats.stackexchange.com/questions/403723/does-adding-more-than-1-dependent-variable-to-sem-have-purpose-other-than-to-con), [Cross Validated: Testing simple mediation model with two separate outcome variables](https://stats.stackexchange.com/questions/192004/testing-simple-mediation-model-with-two-separate-outcome-variables)
+
 ### Mediation analysis
 
-- **Comment:** For curved (nonlinear) paths, see [Nonlinear Mediation](nonlinear-mediation.qmd).
+- **Variable types:** Continuous mediator and outcome; for categorical ones, see the chapter.
+- **When to use:** Your theory says X affects Y through M.
+- **Functions:** lavaan, `sem()`, with the indirect effect defined by `:=` and a bootstrap confidence interval (`se = "bootstrap"`).
+- **Comment:** See [Mediation Analysis](mediation-analysis.qmd). For curved (nonlinear) paths, see [Nonlinear Mediation](nonlinear-mediation.qmd).
 
 ### Control variables (covariates)
 
@@ -187,18 +223,32 @@ See also: De Stavola, B. L., Daniel, R. M., Ploubidis, G. B., & Micali, N. (2015
 - **When to use:** My theory is that demographic variables (e.g., gender and age) affect (or predict) suicidal behavior, so to make the results more robust, I control for the effect of the demographic variables on suicidal behavior.
 - **Comment:**
   - All the x's are independent variables: the one you focus on is the explanatory variable, and the ones you don't focus on are control variables. "Control" means you don't care about it, but because it affects y, it would affect the estimate for the explanatory variable you care about, so you add it to the model to control for it.
-  - The main purpose of control variables is to control potential confounders, so that the relationship between the independent and dependent variables is not distorted by them. By controlling these variables, we can estimate the direct and indirect effects of the independent variable on the dependent variable more accurately. Paths in SEM represent hypothesized causal relationships: the independent variable is the starting point of the causal chain, and the dependent variable is the outcome. If you regress the independent variable on a control variable, which one is the independent variable? The independent variable is generally considered independent. We usually treat X as exogenous; although X and C are correlated, the model is designed to make the causal paths and explanations explicit.
-  - The model aims to estimate the direct and indirect effects of X on Y and M. Although X and C are correlated, we care about the unique effect of X after controlling for C. C is added to control confounding, not to redefine X. When we say X and C are correlated, we only mean that they share some variance in the data; this does not mean that C fully determines X.
+  - Paths in SEM stand for hypothesized causal effects, and the independent variable X is where the chain starts. A control variable C is there to remove confounding, not to explain X, so X stays exogenous. X and C may still correlate; the model then estimates the effect of X with C held constant.
   - How to specify it depends entirely on your theory (or previous studies). If you think a control variable affects the dependent variable, the mediator, or both, regress those variables on the control variable. If you think it only affects the dependent variable, regress only the dependent variable on it. In fact, regression works the same way: the control variables and the independent variable are allowed to correlate by default. But note: don't regress the independent variable on the control variables.
-- **Resources:** [lavaan Google Group: Add control variable in SEM](https://groups.google.com/g/lavaan/c/xdCnpHHTh6s), [lavaan Google Group: lavaan syntax for control variables in mediation](https://groups.google.com/g/lavaan/c/03gq8K324k8), [Cross Validated: How do you control for a variable in SEM with mediation?](https://stats.stackexchange.com/questions/550048/how-do-you-control-for-a-variable-in-sem-with-mediation-what-do-i-regress-onto), [Quora: What are control variables and how do I use them in regression analysis?](https://www.quora.com/What-are-control-variables-and-how-do-I-use-them-in-regression-analysis)
+  - Treat control variables like independent variables. In Becker's (2005) review, about 63% of the studies that used control variables gave no clear reason for at least one of them (Bernerth & Aguinis, 2016). Bernerth and Aguinis (2016) recommend including a control only when theory explains how and why it relates to the focal variables; adding controls does not make a test more conservative. Measure the controls reliably, report their descriptive statistics and correlations, and report the results with and without them. Controls that are unrelated to the focal variables can be left out, which keeps statistical power. A categorical control with more than two categories has one effect per dummy variable.
+- **Resources:** [lavaan Google Group: Add control variable in SEM](https://groups.google.com/g/lavaan/c/xdCnpHHTh6s), [lavaan Google Group: lavaan syntax for control variables in mediation](https://groups.google.com/g/lavaan/c/03gq8K324k8), [Cross Validated: How do you control for a variable in SEM with mediation?](https://stats.stackexchange.com/questions/550048/how-do-you-control-for-a-variable-in-sem-with-mediation-what-do-i-regress-onto), [Quora: What are control variables and how do I use them in regression analysis?](https://www.quora.com/What-are-control-variables-and-how-do-I-use-them-in-regression-analysis), [UCLA OARC: Covariate Selection in Regression: A Crash Course on Good and Bad Controls](https://stats.oarc.ucla.edu/r/seminars/good-bad-controls/)
 
 ### Moderation
 
 - **Variable types:** Usually categorical (compared with a multigroup model), but continuous variables also work: use them directly in an interaction term rather than splitting them into groups, which loses information.
+- **When to use:** Your theory says that the effect of X on Y depends on a third variable W, for example that the effect of study time on exam scores depends on prior knowledge.
+- **Functions:** For observed variables, center X and W and regress Y on X, W, and their product: Y = b0 + b1X + b2W + b3(X × W) + e. In lavaan, write `y ~ b1*x + b2*w + b3*x:w`. b3 is the interaction; the effect of X at a value w of W (a simple slope) is b1 + b3w, which you can define with `:=`. For latent variables, the product is harder to model: product indicators (`semTools::indProd()`), or latent moderated structural equations in Mplus (`XWITH`).
+- **Comment:** After centering, b1 is the effect of X at the mean of W, and b2 the effect of W at the mean of X.
+- **Resources:** [EPSY 579 R Cookbook for SEM, Lab 3: Moderation and conditional effects](https://gabriellajg.github.io/EPSY-579-R-Cookbook-for-SEM/lavaan-lab-3-moderation-and-conditional-effects.html)
 
 ### Multigroup comparisons
 
 - **Comment:** Measurement invariance and comparing paths across groups: see [Multigroup Analysis](multigroup-analysis.qmd).
+
+### Model comparison
+
+- **When to use:** You compare competing models, such as a model with and without a path, or two theories about the same variables.
+- **Comment:**
+  - Nested models (one model is the other with some parameters fixed or constrained): χ² difference test, `lavTestLRT(fit1, fit2)`. With MLR it uses the scaled difference test (Satorra & Bentler, 2001), and with WLSMV a scaled and shifted one. Don't subtract the robust χ² values by hand: the scaled difference is not the difference of the scaled values.
+  - Non-nested models: compare AIC and BIC; smaller is better. They need a likelihood, so they exist for ML and MLR but not for WLSMV or DWLS.
+  - Two paths in the same model: label them and define the difference, `diff := b1 - b2`, or constrain them to be equal (give them the same label) and compare with the free model in `lavTestLRT()`. Equality constraints apply to the unstandardized paths, so the variables should be on comparable scales.
+  - Paths across groups: see [Multigroup Analysis](multigroup-analysis.qmd#compare-path-coefficients).
+- **Resources:** [Regorz: Path comparison in lavaan](https://www.regorz-statistik.de/blog/lavaan_path_comparison.html), [lavaan Google Group: Comparing path coefficients in SEM using lavTestLRT - can I compare standardized or unstandardized values?](https://groups.google.com/g/lavaan/c/I2Svn1gfTTU)
 
 ### Export results
 
@@ -254,7 +304,10 @@ summary(fit_b, fit.measures = TRUE, standardized = TRUE,
 How to read the output:
 
 - `Estimate` is the unstandardized estimate. The first loading is 1 and has no SE because it is fixed.
-- `Std.all` is the standardized solution: the standardized loadings under Latent Variables, and the standardized residual variances θ under Variances (the dot before an item name marks a residual).
+- `Std.Err` is its standard error, `z-value` is `Estimate` divided by `Std.Err`, and `P(>|z|)` is the p-value of z: |z| > 1.96 means p < .05.
+- `Std.lv` standardizes only the latent variables (factor variance 1), so the loadings stay in the units of the items; they are the estimates you get with `std.lv = TRUE`.
+- `Std.all` is the standardized solution, with the items standardized too: the standardized loadings under Latent Variables, and the standardized residual variances θ under Variances (the dot before an item name marks a residual).
+- The `Std` columns have no SEs or p-values; `standardizedSolution(fit_b)` gives them, with CIs.
 - `R-Square` is 1 − θ for each item.
 - With MLR, read the `Scaled` column of the χ² test and the `Robust` lines for CFI, TLI, and RMSEA. Here χ²(5) = 4.37, p = .497.
 
@@ -431,12 +484,30 @@ For the lavaan and Mplus operators side by side, see the [quick reference](#lava
 - [UCLA OARC: Introduction to Structural Equation Modeling (SEM) in R with lavaan](https://stats.oarc.ucla.edu/r/seminars/rsem/)
 - [UCLA OARC: Confirmatory Factor Analysis (CFA) in R with lavaan](https://stats.oarc.ucla.edu/r/seminars/rcfa/)
 - [MplusAutomation (CRAN)](https://CRAN.R-project.org/package=MplusAutomation)
+- [PSY 597: Structural Equation Modeling (Penn State)](https://psu-psychology.github.io/psy-597-sem-sp2019/)
+- [EPSY 579: R Cookbook for Structural Equation Modeling](https://gabriellajg.github.io/EPSY-579-R-Cookbook-for-SEM/)
+
+Becker, T. E. (2005). Potential problems in the statistical control of variables in organizational research: A qualitative analysis with recommendations. *Organizational Research Methods*, *8*(3), 274-289. https://doi.org/10.1177/1094428105278021
+
+Bernerth, J. B., & Aguinis, H. (2016). A critical review and best-practice recommendations for control variable usage. *Personnel Psychology*, *69*(1), 229-283. https://doi.org/10.1111/peps.12103
 
 Cheung, G. W., Cooper-Thomas, H. D., Lau, R. S., & Wang, L. C. (2024). Reporting reliability, convergent and discriminant validity with structural equation modeling: A review and best-practice recommendations. *Asia Pacific Journal of Management*, *41*(2), 745-783. https://doi.org/10.1007/s10490-023-09871-y
 
+Cohen, J. (1988). *Statistical power analysis for the behavioral sciences* (2nd ed.). Lawrence Erlbaum Associates.
+
+Deegan, J. (1978). On the occurrence of standardized regression coefficients greater than one. *Educational and Psychological Measurement*, *38*(4), 873-888. https://doi.org/10.1177/001316447803800404
+
+Hayes, A. F. (2009). Beyond Baron and Kenny: Statistical mediation analysis in the new millennium. *Communication Monographs*, *76*(4), 408-420. https://doi.org/10.1080/03637750903310360
+
 Hu, L., & Bentler, P. M. (1999). Cutoff criteria for fit indexes in covariance structure analysis: Conventional criteria versus new alternatives. *Structural Equation Modeling: A Multidisciplinary Journal*, *6*(1), 1-55. https://doi.org/10.1080/10705519909540118
 
+Rose, N., Wagner, W., Mayer, A., & Nagengast, B. (2019). Model-based manifest and latent composite scores in structural equation models. *Collabra: Psychology*, *5*(1), Article 9. https://doi.org/10.1525/collabra.143
+
+Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test statistic for moment structure analysis. *Psychometrika*, *66*(4), 507-514. https://doi.org/10.1007/BF02296192
+
 Schreiber, J. B. (2008). Core reporting practices in structural equation modeling. *Research in Social and Administrative Pharmacy*, *4*(2), 83-97. https://doi.org/10.1016/j.sapharm.2007.04.003
+
+Williams, A. L., Conway, C. C., Olino, T. M., Revelle, W., Zinbarg, R. E., & HiTOP Utility Workgroup. (2025). Testing criterion validity in hierarchical models of psychopathology: Comparison of latent-variable and factor-score approaches. *Clinical Psychological Science*, *13*(1), 128-145. https://doi.org/10.1177/21677026231225414
 
 ### Further Study
 
@@ -444,3 +515,12 @@ Schreiber, J. B. (2008). Core reporting practices in structural equation modelin
 
 - [lavaan: Categorical data](https://lavaan.ugent.be/tutorial/cat.html)
 - [lavaan Google Group: How to enter binary observed outcome variable + scaling of latent variable?](https://groups.google.com/g/lavaan/c/FMkMUaj3FA8)
+- [lavaan Google Group: WLSMV or DWLS? Lavaan and SEM with categorical variables](https://groups.google.com/g/lavaan/c/Nymu7jmVUk8)
+- [CRMDA SEM Example 07: Comparing ML and WLSMV estimators for ordinal, Likert-type items](https://pj.freefaculty.org/guides/crmda_workshops/semexample/R/Ex-07-Ordinal/ordinal-01-hbsc.html)
+- Park, C. G. (2023). Implementing alternative estimation methods to test the construct validity of Likert-scale instruments. *Korean Journal of Women Health Nursing*, *29*(2), 85-90. https://doi.org/10.4069/kjwhn.2023.06.14.2
+
+#### Composite Scores and Item Parceling
+
+- Yang, C., Nay, S., & Hoyle, R. H. (2010). Three approaches to using lengthy ordinal scales in structural equation models. *Applied Psychological Measurement*, *34*(2), 122-142. https://doi.org/10.1177/0146621609338592
+- [Cross Validated: Using total score from multi-scale instrument in structural equation modeling](https://stats.stackexchange.com/questions/27903/using-total-score-from-multi-scale-instrument-in-structural-equation-modeling)
+- [Cross Validated: Can we use "subscale scores" as "observed variables" in SEM?](https://stats.stackexchange.com/questions/617645/can-we-use-subscale-scores-as-observed-variables-in-sem-dividing-a-model)

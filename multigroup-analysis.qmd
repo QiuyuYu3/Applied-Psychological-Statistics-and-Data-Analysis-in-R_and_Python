@@ -24,6 +24,7 @@ Gradually constrain more parameters to be equal across groups, and test at each 
 1. Configural invariance: the same factor structure is imposed on all groups, and all parameters are free.
 2. Weak (metric) invariance: the factor loadings are constrained to be equal across groups. You need it before you compare regression paths or covariances between latent variables.
 3. Strong (scalar) invariance: the factor loadings and intercepts are constrained to be equal across groups. You need it before you compare latent means.
+4. Strict invariance: the residual variances are also constrained to be equal (`group.equal = c("loadings", "intercepts", "residuals")`). It is not needed to compare latent means or paths, so it is often skipped. It matters if you compare the variances of observed scores across groups, because unequal residual variances change them.
 
 If a step fails, you can try partial invariance (section 3) before you go on.
 

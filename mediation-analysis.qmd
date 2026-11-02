@@ -1,0 +1,360 @@
+---
+engine: knitr
+format:
+  live-html:
+    webr:
+      packages:
+        - lavaan
+---
+
+{{< include ./_extensions/r-wasm/live/_knitr.qmd >}}
+
+# Mediation Analysis
+
+A mediation model asks whether X affects Y through a third variable, the mediator M. This chapter covers the simple mediation model, how to test the indirect effect, what to do when the total effect is not significant, and models with more than one mediator. When a path is curved, see [Nonlinear Mediation](nonlinear-mediation.qmd).
+
+## Before You Start
+
+- Mediation is a causal claim: X changes M, and M in turn changes Y. The model estimates an indirect effect either way, but it is a causal effect only if the design supports it: X comes before M and M before Y, and no unmeasured variable affects both M and Y (Imai et al., 2010). Cross-sectional data cannot show the order.
+- Build the model from theory, and get the simple mediation model to work before you move on to more complex ones (Note 7 in [SEM](structural-equation-modeling.qmd#notes)).
+- The examples use observed variables. With latent variables, the structural part is the same: write the measurement model first, then the regressions among the factors.
+
+## The Simple Mediation Model
+
+Let us start with the simple mediation model:
+
+$$
+\begin{aligned}
+X \to M:&\quad M = i_1 + aX \\
+X, M \to Y:&\quad Y = i_2 + c'X + bM
+\end{aligned}
+$$
+
+Substituting the equation for $M$ into the equation for $Y$:
+
+$$
+Y = i_2 + c'X + b(i_1 + aX) = (i_2 + b\,i_1) + (ab + c')X
+$$
+
+So the total effect of $X$ on $Y$ is $c = ab + c'$, the slope you get when you regress $Y$ on $X$ alone ($Y = i_3 + cX$).
+
+### What are the direct and indirect effects?
+
+- Direct effect: a single arrow, such as X → Y, X → M, or M → Y. The direct effect of X on Y ($c'$) is the part of X's effect that does not pass through the mediator.
+- Indirect effect: such as X → M → Y. X influences M, and M in turn affects Y. It is quantified as the product of $a$ (X → M) and $b$ (M → Y): when X changes by one unit, Y changes by $ab$ units through M.
+- Total effect: $c = ab + c'$, the sum of the direct and indirect effects.
+
+## Testing the Indirect Effect
+
+The indirect effect $ab$ is the product of two estimates. Even when $a$ and $b$ are normally distributed, their product is not: its sampling distribution is usually skewed, especially in small samples. Tests that assume a normal distribution for $ab$, such as the Sobel test, therefore have low power (MacKinnon et al., 2002). In lavaan, a parameter defined with `:=` gets a delta-method standard error by default, which is the same normal approximation as the Sobel test.
+
+Hayes and Scharkow (2013) compared the common tests in a simulation:
+
+| Method | How it works | In Hayes and Scharkow's (2013) simulations |
+|---|---|---|
+| Sobel test (delta method) | Divides $ab$ by a standard error that assumes $ab$ is normally distributed | The least powerful test; they advise against it |
+| Joint significance | Concludes there is an indirect effect when both $a$ and $b$ are significant | Performs well, but gives no confidence interval and does not extend to moderated mediation |
+| Monte Carlo CI | Draws $a$ and $b$ many times from a normal distribution with their estimates and standard errors, and takes the 2.5th and 97.5th percentiles of the products | Good control of false positives, less power than the bias-corrected bootstrap |
+| Percentile bootstrap | Resamples the cases with replacement, refits the model in each sample, and takes the 2.5th and 97.5th percentiles of $ab$ | More powerful than the Sobel test, fewer false positives in small samples than the bias-corrected bootstrap when one path is zero, and better coverage; needs no standard errors of $a$ and $b$ |
+| Bias-corrected bootstrap | Like the percentile bootstrap, but shifts the percentiles according to how far the bootstrap distribution is off-center from the original estimate | The most powerful, but too many false positives in some conditions and worse coverage in small samples |
+
+Hayes and Scharkow (2013, pp. 1924-1925) recommend the bias-corrected bootstrap when power matters most, the Monte Carlo CI when false positives are the bigger worry, and the percentile bootstrap as a good compromise. In most of their simulated samples, and especially with 500 cases or more, the tests led to the same conclusion. Fritz et al. (2012) showed that part of the extra power of the bias-corrected bootstrap comes from an inflated Type I error rate, which appears when the sample is small and the other path is medium or large; below about 2,500 cases, the percentile bootstrap kept the Type I error rate closer to 5%. The percentile bootstrap is the default in this chapter.
+
+- Choose one test before you analyze the data. If several tests disagree, there is no way to tell which one is right, and it is tempting to report the one that supports your hypothesis. Look at the significance of $a$ and $b$ as well (Fritz et al., 2012).
+
+- Judge significance by the confidence interval, not the p-value. With `se = "bootstrap"`, lavaan's p-value for $ab$ divides the estimate by the bootstrap standard error and compares it with the normal distribution, so it still assumes a symmetric distribution and can disagree with the percentile CI. The indirect effect is significant when the 95% CI does not include 0.
+- 5,000 bootstrap draws are common; use 10,000 if your computer allows. More draws make the limits of the CI stable from run to run. They do not change the estimate, which always comes from the original sample. Set a seed with `set.seed()` so that the CI can be reproduced.
+- lavaan bootstraps with ML, and with DWLS for ordered variables. `estimator = "MLR"` or `"WLSMV"` together with `se = "bootstrap"` stops with an error; the bootstrap already handles non-normal data. Missing data are fine: `missing = "fiml"` works with the bootstrap.
+- In some bootstrap samples the model may not converge. lavaan then warns how many runs failed and computes the standard errors and CIs from the rest; a few failures out of thousands are not a problem. `attr(lavInspect(fit, "boot"), "error.idx")` lists the failed runs.
+
+## When the Total Effect Is Not Significant
+
+The causal steps of Baron and Kenny (1986) start by testing whether X affects Y (the total effect $c$) and stop if it does not. This step is not needed (Hayes, 2009, pp. 413-414; Rucker et al., 2011, p. 368). The total effect is the sum $c = ab + c'$, and nothing keeps $ab$ from being different from zero when $c$ is not:
+
+- When $ab$ and $c'$ have opposite signs, they cancel out in $c$, and the total effect can be close to zero although the indirect effect is not. Within a mediation model, this is called inconsistent mediation, or suppression (MacKinnon et al., 2000). The same happens with several mediators whose indirect effects have opposite signs. Hayes (2009, Table 1) gives an example with 100 cases, and [Inconsistent Mediation](#inconsistent-mediation) below shows one with simulated data.
+- When X and Y are not associated, some authors speak of an indirect effect of X on Y through M rather than of mediation (Hayes, 2009, p. 413).
+
+Two common summaries are of little use:
+
+- The ratio $ab/c$ is often reported as the proportion of the total effect that is mediated. It is not a proportion: it is larger than 1 when $c$ is smaller than $ab$, negative when $ab$ and $c$ have opposite signs, undefined when $c = 0$, and it grows without bound as $c$ approaches zero (Hayes, 2009, p. 417). The ratio $ab/c'$ has the same problems.
+- The labels "full mediation" and "partial mediation" are of limited use (Rucker et al., 2011, pp. 364-366). They rest on whether $c'$ is significant, which depends on the sample size: the smaller the sample, the more likely the same effects are called "full" mediation. They also depend on how significant the total effect was to begin with. Focus instead on the size of the indirect effect (Rucker et al., 2011, p. 368), and report it and the direct effect with their CIs.
+
+## More Than One Mediator
+
+### Parallel Mediators
+
+X → M1 → Y and X → M2 → Y, with M1 and M2 not affecting each other. Each mediator has its own specific indirect effect ($a_1b_1$ and $a_2b_2$), their sum is the total indirect effect, and adding the direct effect $c'$ gives the total effect. A specific indirect effect is in units of Y per unit of X, whatever the scales of the mediators, so two of them can be compared directly: define their difference with `:=` and bootstrap its CI. This gives the size of the difference with a CI, whereas a χ² difference test of an equality constraint gives only a p-value (Lau & Cheung, 2012). Keep a mediator in the model even if its indirect effect is not significant: removing it and refitting can change the other paths (Lau & Cheung, 2012).
+
+Add the residual covariance of the mediators, `m1 ~~ m2`. `sem()` frees the residual covariance of outcomes that predict nothing else, but the mediators also predict Y, so their residual covariance is fixed at 0 unless you write it. Fixing it at 0 states that the mediators are related only through X, which is rarely the theory. In [the example below](#parallel-example), leaving it out gives a model that clearly misfits, and standard errors of the M → Y paths that are too small.
+
+### Serial Mediators
+
+X → M1 → M2 → Y. M2 is regressed on M1, and the indirect effect through both mediators is $a_1 d b_2$, where $d$ is the M1 → M2 path. M1 → M2 is a regression path, so there is no `m1 ~~ m2` to add.
+
+```r
+serial_model <- '
+m1 ~ a1 * x
+m2 ~ a2 * x + d * m1
+y ~ b1 * m1 + b2 * m2 + cp * x
+
+ind1 := a1 * b1
+ind2 := a2 * b2
+ind12 := a1 * d * b2
+total := cp + a1 * b1 + a2 * b2 + a1 * d * b2
+'
+```
+
+## Covariates and Categorical Variables
+
+- Covariates: regress the mediator, the outcome, or both on the covariate, depending on your theory, and do not regress X on it. See the [control variables](structural-equation-modeling.qmd#control-variables-covariates) card in the SEM chapter.
+- Ordinal mediator or outcome: declare it with `ordered =`, and lavaan uses WLSMV, with the paths to an ordinal outcome on the probit scale of the continuous response assumed to underlie it. WLSMV corrects the standard errors of single parameters, but the standard error of a defined $ab$ is still the delta method. For a bootstrap CI, use `estimator = "DWLS"`, because lavaan does not bootstrap with WLSMV.
+- Binary mediator or outcome: see [If M or Y is binary](nonlinear-mediation.qmd#if-m-or-y-is-binary) in Nonlinear Mediation, and the papers under [Further Study](#further-study).
+
+## Report Results
+
+Report the estimator, how the indirect effect was tested (for example, a percentile bootstrap CI with the number of draws), the paths $a$, $b$, and $c'$, and the indirect, direct, and total effects with their 95% CIs. With more than one mediator, report each specific indirect effect and the total indirect effect. A path diagram with the coefficients makes the model easy to follow.
+
+With 5,000 draws (in R on your computer; the browser cells below use 200), the simple mediation model below could be reported like this:
+
+> The indirect effect of X on Y through M was tested with a 95% percentile bootstrap confidence interval based on 5,000 draws, with ML estimation. X predicted M, *a* = 0.32, *SE* = 0.06, and M predicted Y controlling for X, *b* = 0.43, *SE* = 0.06. The indirect effect was *ab* = 0.14, 95% CI [0.08, 0.21]. The direct effect of X on Y was *c'* = 0.32, 95% CI [0.20, 0.45], and the total effect was *c* = 0.46, 95% CI [0.34, 0.59].
+
+## Syntax
+
+The code in this section runs in your browser and prints its output when the page loads. The first visit downloads lavaan, so the first results take a while to appear, and each of the three bootstrap cells takes several seconds. You can edit any cell and run it again.
+
+### Simulated Data
+
+The examples simulate their own data, so the true values are known: $a = 0.4$, $b = 0.4$, and $c' = 0.2$ for Y, so the true indirect effect is 0.16 and the true total effect 0.36. Y2 has the same mediator but a negative direct effect, $c' = -0.16$, so its true total effect is 0.
+
+```{webr}
+#| autorun: true
+set.seed(2025)
+n <- 300
+x <- rnorm(n)
+m <- 0.4 * x + rnorm(n)
+y <- 0.4 * m + 0.2 * x + rnorm(n)
+# y2: same mediator, negative direct effect
+y2 <- 0.4 * m - 0.16 * x + rnorm(n)
+med_data <- data.frame(x, m, y, y2)
+```
+
+### Simple Mediation
+
+Label the paths, then define the indirect and total effects from the labels with `:=`.
+
+```{webr}
+#| autorun: true
+library(lavaan)
+
+med_model <- '
+m ~ a * x
+y ~ b * m + cp * x
+
+ab := a * b
+total := cp + a * b
+'
+fit_med <- sem(med_model, data = med_data)
+parameterEstimates(fit_med)
+```
+
+The rows `ab` and `total` are the defined parameters. Their standard errors and CIs come from the delta method, so the CI of `ab` is symmetric around the estimate. The model is saturated (df = 0), so its fit indices carry no information.
+
+### Bootstrap Confidence Intervals
+
+```{webr}
+#| autorun: true
+set.seed(2025)
+fit_boot <- sem(med_model, data = med_data,
+                se = "bootstrap", bootstrap = 200)
+
+# percentile and bias-corrected CIs
+pe_perc <- parameterEstimates(fit_boot,
+                              boot.ci.type = "perc")
+pe_bc <- parameterEstimates(fit_boot,
+                            boot.ci.type = "bca.simple")
+pe_perc[pe_perc$op == ":=", ]
+pe_bc[pe_bc$op == ":=", ]
+```
+
+::: {.callout-note}
+The browser version uses only 200 bootstrap draws so that it finishes quickly. For a real analysis, use 5,000 draws or more. In R on a laptop, 5,000 draws of this model take about a minute; in the browser they take much longer.
+:::
+
+The estimates are the same as in the first fit; only the standard errors and CIs change. With these 200 draws, the percentile CI of the indirect effect is [0.079, 0.216] and the bias-corrected one [0.082, 0.228]. Both exclude 0, and both are asymmetric around the estimate of 0.137, unlike the delta-method CI [0.076, 0.198]. The true indirect effect is 0.16.
+
+### Under the Hood: the Monte Carlo CI
+
+The Monte Carlo CI needs only the estimates of $a$ and $b$ and their covariance matrix, which `coef()` and `vcov()` return. It draws many pairs of $a$ and $b$ from a normal distribution with these values and takes the percentiles of their products:
+
+```{webr}
+#| autorun: true
+# estimates of a and b and their covariance matrix
+est <- coef(fit_med)[c("a", "b")]
+V <- vcov(fit_med)[c("a", "b"), c("a", "b")]
+
+# 20,000 draws from a bivariate normal distribution
+set.seed(2025)
+z <- matrix(rnorm(2 * 20000), ncol = 2)
+draws <- sweep(z %*% chol(V), 2, est, "+")
+ab_draws <- draws[, 1] * draws[, 2]
+quantile(ab_draws, c(0.025, 0.975))
+```
+
+The Monte Carlo CI, [0.080, 0.202], is close to the bootstrap CIs, without refitting the model.
+
+### Inconsistent Mediation {#inconsistent-mediation}
+
+The same model with Y2 as the outcome:
+
+```{webr}
+#| autorun: true
+sup_model <- '
+m ~ a * x
+y2 ~ b * m + cp * x
+
+ab := a * b
+total := cp + a * b
+'
+set.seed(2025)
+fit_sup <- sem(sup_model, data = med_data,
+               se = "bootstrap", bootstrap = 200)
+pe_sup <- parameterEstimates(fit_sup,
+                             boot.ci.type = "perc")
+pe_sup[pe_sup$label != "", ]
+
+# the "proportion mediated" ab / total
+est_sup <- setNames(pe_sup$est, pe_sup$label)
+est_sup["ab"] / est_sup["total"]
+```
+
+The total effect of X on Y2 is 0.07, 95% CI [−0.05, 0.19]. A test of the total effect alone, the first of Baron and Kenny's steps, would stop here. Yet the indirect effect is 0.13, 95% CI [0.08, 0.20], and the direct effect is negative, −0.06: the two cancel out. The "proportion mediated" $ab/c$ is 1.84, that is, 184% of the total effect.
+
+### Parallel Mediators {#parallel-example}
+
+Here the residuals of the two mediators correlate .4 in the simulation, as they would if the mediators shared a cause other than X. The true specific indirect effects are $0.5 \times 0.4 = 0.20$ through M1 and $0.3 \times 0.3 = 0.09$ through M2. First, the model without the residual covariance:
+
+```{webr}
+#| autorun: true
+set.seed(2026)
+n <- 300
+x <- rnorm(n)
+# residuals of the mediators correlate .4
+e1 <- rnorm(n)
+e2 <- 0.4 * e1 + sqrt(1 - 0.4^2) * rnorm(n)
+m1 <- 0.5 * x + e1
+m2 <- 0.3 * x + e2
+y <- 0.4 * m1 + 0.3 * m2 + 0.1 * x + rnorm(n)
+par_data <- data.frame(x, m1, m2, y)
+
+par_model <- '
+m1 ~ a1 * x
+m2 ~ a2 * x
+y ~ b1 * m1 + b2 * m2 + cp * x
+
+ind1 := a1 * b1
+ind2 := a2 * b2
+total_ind := a1 * b1 + a2 * b2
+diff := a1 * b1 - a2 * b2
+'
+# m1 ~~ m2 is not written, so it is fixed at 0
+fit_par0 <- sem(par_model, data = par_data)
+fitMeasures(fit_par0, c("chisq", "df", "pvalue"))
+```
+
+χ²(1) = 87.4, p < .001: the data contradict the claim that the mediators are related only through X. In this example the path estimates are the same with and without the residual covariance, but without it the standard errors of `b1` and `b2` are smaller than in the correct model (0.054 and 0.055, against 0.063 and 0.064), so their CIs are too narrow.
+
+```{webr}
+#| autorun: true
+# add the residual covariance of the mediators
+par_model2 <- paste(par_model, "m1 ~~ m2")
+set.seed(2026)
+fit_par <- sem(par_model2, data = par_data,
+               se = "bootstrap", bootstrap = 200)
+pe_par <- parameterEstimates(fit_par,
+                             boot.ci.type = "perc")
+pe_par[pe_par$op == ":=", ]
+```
+
+With the residual covariance (0.54, a residual correlation of .50), the model is saturated. The indirect effect through M1 is 0.26, 95% CI [0.17, 0.39], and through M2 0.11, 95% CI [0.06, 0.17]; both CIs include the true values. Their difference, 0.15, 95% CI [0.05, 0.30], excludes 0, so the indirect effect through M1 is larger.
+
+### Standardized Indirect Effects
+
+```{webr}
+#| autorun: true
+std <- standardizedSolution(fit_boot)
+std[std$op == ":=", ]
+```
+
+The standardized indirect effect is 0.117, 95% CI [0.070, 0.179]. In lavaan 0.7 (checked with 0.7-3, the version the browser loads), `standardizedSolution()` of a bootstrapped model gives percentile bootstrap CIs for the standardized estimates (argument `boot_ci_type`). In lavaan 0.6, it gives intervals that are symmetric around the estimate even with `se = "bootstrap"`. With lavaan 0.6, use the semhelpinghands package, which computes the bootstrap CIs from the draws already stored in the fitted model:
+
+```r
+library(semhelpinghands)
+standardizedSolution_boot_ci(fit_boot)
+```
+
+### Syntax in Mplus
+
+This part runs in Mplus on your computer, not in the browser. `prepareMplusData()` from the MplusAutomation package writes the data in Mplus format and returns the matching `DATA` and `VARIABLE` lines.
+
+```r
+library(MplusAutomation)
+mplus_syntax <- prepareMplusData(med_data, "med_data.dat")
+mplus_syntax
+```
+
+```text
+TITLE: Simple mediation;
+DATA: FILE = med_data.dat;
+VARIABLE: NAMES = x m y y2;
+  USEVARIABLES = x m y;
+ANALYSIS: BOOTSTRAP = 5000;
+MODEL:
+  m ON x (a);
+  y ON m (b);
+  y ON x (cp);
+MODEL CONSTRAINT:
+  NEW (ab total);
+  ab = a*b;
+  total = cp + a*b;
+OUTPUT: CINTERVAL(BOOTSTRAP);
+! CINTERVAL(BCBOOTSTRAP) gives bias-corrected intervals instead
+```
+
+For parallel mediators, add `m1 WITH m2;` and one `NEW` parameter for each specific indirect effect. `MODEL INDIRECT: y IND x;` is a shortcut that lists every indirect effect of x on y.
+
+## Resources & References
+
+- [lavaan tutorial: Mediation](https://lavaan.ugent.be/tutorial/mediation.html)
+- [R for HR: Estimating a mediation model using path analysis](https://rforhr.com/mediationanalysis.html)
+- [paolotoffanin: Multiple-mediator analysis with lavaan](https://paolotoffanin.wordpress.com/2017/05/06/multiple-mediator-analysis-with-lavaan/)
+- [semhelpinghands: Bootstrap confidence interval for standardized solution in lavaan](https://cran.r-project.org/web/packages/semhelpinghands/vignettes/standardizedSolution_boot_ci.html)
+- [lavaan Google Group: Disagreement in bootstrapping p-value and confidence interval (SEM)](https://groups.google.com/g/lavaan/c/kEn23FPS6Vw)
+- [lavaan Google Group: Path analysis: Discrepancy between bootstrapped CI and p-value](https://groups.google.com/g/lavaan/c/uO_E7HDLAcI)
+- [lavaan Google Group: Mediation & Bootstrapping with DWLS estimator](https://groups.google.com/g/lavaan/c/g-8KY8Ai9FI)
+- [Cross Validated: DWLS estimator in lavaan & interpreting indirect effects](https://stats.stackexchange.com/questions/507743/dwls-estimator-in-lavaan-interpreting-indirect-effects)
+
+Baron, R. M., & Kenny, D. A. (1986). The moderator-mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. *Journal of Personality and Social Psychology*, *51*(6), 1173-1182. https://doi.org/10.1037/0022-3514.51.6.1173
+
+Fritz, M. S., Taylor, A. B., & MacKinnon, D. P. (2012). Explanation of two anomalous results in statistical mediation analysis. *Multivariate Behavioral Research*, *47*(1), 61-87. https://doi.org/10.1080/00273171.2012.640596
+
+Hayes, A. F. (2009). Beyond Baron and Kenny: Statistical mediation analysis in the new millennium. *Communication Monographs*, *76*(4), 408-420. https://doi.org/10.1080/03637750903310360
+
+Hayes, A. F., & Scharkow, M. (2013). The relative trustworthiness of inferential tests of the indirect effect in statistical mediation analysis: Does method really matter? *Psychological Science*, *24*(10), 1918-1927. https://doi.org/10.1177/0956797613480187
+
+Imai, K., Keele, L., & Tingley, D. (2010). A general approach to causal mediation analysis. *Psychological Methods*, *15*(4), 309-334. https://doi.org/10.1037/a0020761
+
+Lau, R. S., & Cheung, G. W. (2012). Estimating and comparing specific mediation effects in complex latent variable models. *Organizational Research Methods*, *15*(1), 3-16. https://doi.org/10.1177/1094428110391673
+
+MacKinnon, D. P., Krull, J. L., & Lockwood, C. M. (2000). Equivalence of the mediation, confounding and suppression effect. *Prevention Science*, *1*(4), 173-181. https://doi.org/10.1023/A:1026595011371
+
+MacKinnon, D. P., Lockwood, C. M., Hoffman, J. M., West, S. G., & Sheets, V. (2002). A comparison of methods to test mediation and other intervening variable effects. *Psychological Methods*, *7*(1), 83-104. https://doi.org/10.1037/1082-989X.7.1.83
+
+Rucker, D. D., Preacher, K. J., Tormala, Z. L., & Petty, R. E. (2011). Mediation analysis in social psychology: Current practices and new recommendations. *Social and Personality Psychology Compass*, *5*(6), 359-371. https://doi.org/10.1111/j.1751-9004.2011.00355.x
+
+### Further Study
+
+#### Categorical Mediators and Outcomes
+
+- He, J., Wang, X., & Curry, D. J. (2017). Mediation analysis: A new test when all or some variables are categorical. *International Journal of Research in Marketing*, *34*(4), 780-798. https://doi.org/10.1016/j.ijresmar.2017.08.001
+- Jia, F., Wu, W., & Chen, P.-Y. (2023). Testing indirect effect with a complete or incomplete dichotomous mediator. *British Journal of Mathematical and Statistical Psychology*, *76*(3), 539-558. https://doi.org/10.1111/bmsp.12313
+- [lavaan Google Group: binary outcome in mediation](https://groups.google.com/g/lavaan/c/XMkkacGPzjE)

@@ -17,7 +17,7 @@ This chapter is about mediation models in which the paths between observed varia
 
 ## Linear Mediation: Effects as Slopes
 
-We use slopes to get the path effects and calculate the mediation effect, so these effects are simple to label. Let us start with the simple mediation model:
+We use slopes to get the path effects and calculate the mediation effect, so these effects are simple to label. In the simple mediation model ([Mediation Analysis](mediation-analysis.qmd#the-simple-mediation-model)),
 
 $$
 \begin{aligned}
@@ -26,18 +26,7 @@ X, M \to Y:&\quad Y = i_2 + c'X + bM
 \end{aligned}
 $$
 
-Substituting the equation for $M$ into the equation for $Y$:
-
-$$
-Y = i_2 + c'X + b(i_1 + aX) = (i_2 + b\,i_1) + (ab + c')X
-$$
-
-So the total effect of $X$ on $Y$ is $c = ab + c'$, the slope you get when you regress $Y$ on $X$ alone ($Y = i_3 + cX$).
-
-### What are the direct and indirect effects?
-
-- Direct effect: a single arrow, such as X → Y, X → M, or M → Y. The direct effect of X on Y ($c'$) is the part of X's effect that does not pass through the mediator.
-- Indirect effect: such as X → M → Y. X influences M, and M in turn affects Y. It is quantified as the product of $a$ (X → M) and $b$ (M → Y): when X changes by one unit, Y changes by $ab$ units through M.
+the indirect effect is $ab$, the direct effect is $c'$, and the total effect is $c = ab + c'$.
 
 Here, the slope is what we want: it quantifies the rate of change between the variables. We can get the slope by taking the derivative. Let's review two rules first:
 

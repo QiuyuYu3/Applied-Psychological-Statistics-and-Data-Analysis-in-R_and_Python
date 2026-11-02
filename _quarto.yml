@@ -28,6 +28,7 @@ book:
         - generalized-linear-model.qmd
         - structural-equation-modeling.qmd
         - multigroup-analysis.qmd
+        - mediation-analysis.qmd
         - nonlinear-mediation.qmd
         - reliability-and-validity.qmd
 

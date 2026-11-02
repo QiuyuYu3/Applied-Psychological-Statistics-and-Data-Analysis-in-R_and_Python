@@ -88,7 +88,7 @@ In the middle and later stages of programming, you will learn mainly by looking 
     - Count models: Poisson, negative binomial
 - [SEM](structural-equation-modeling.qmd)
     - CFA & EFA
-    - Mediation test, bootstrap
+    - [Mediation test, bootstrap](mediation-analysis.qmd)
         - [Nonlinear mediation](nonlinear-mediation.qmd)
     - Moderation
     - [Multiple group comparison](multigroup-analysis.qmd)
