@@ -691,3 +691,10 @@ round(lavInspect(fit_sem, "rsquare")[c("FB1", "FB2")], 3)
 ```
 
 The χ², the paths, the indirect and total effects, their standardized values, and R² match the code above. lavaan also gives standard errors, which this chapter does not compute.
+
+## Resources & References
+
+- Bollen, K. A. (1989). *Structural equations with latent variables*. Wiley. https://doi.org/10.1002/9781118619179
+- Brown, T. A. (2015). *Confirmatory factor analysis for applied research* (2nd ed.). Guilford Press.
+- Kaplan, D. (2009). *Structural equation modeling: Foundations and extensions* (2nd ed.). SAGE. https://doi.org/10.4135/9781452226576
+- Loehlin, J. C., & Beaujean, A. A. (2017). *Latent variable models: An introduction to factor, path, and structural equation analysis* (5th ed.). Routledge. https://doi.org/10.4324/9781315643199

@@ -708,6 +708,7 @@ These are the estimates, *SE*, *z*, *p*, and CI columns of Table 4. Table 4 come
 - [MplusAutomation (CRAN)](https://CRAN.R-project.org/package=MplusAutomation)
 - [PSY 597: Structural Equation Modeling (Penn State)](https://psu-psychology.github.io/psy-597-sem-sp2019/)
 - [EPSY 579: R Cookbook for Structural Equation Modeling](https://gabriellajg.github.io/EPSY-579-R-Cookbook-for-SEM/)
+- Kline, R. B. (2023). *Principles and practice of structural equation modeling* (5th ed.). Guilford Press.
 
 Becker, T. E. (2005). Potential problems in the statistical control of variables in organizational research: A qualitative analysis with recommendations. *Organizational Research Methods*, *8*(3), 274-289. https://doi.org/10.1177/1094428105278021
 
