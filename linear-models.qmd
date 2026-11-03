@@ -1,0 +1,25 @@
+# Linear Models
+
+## One Example, Four Tests
+
+| g | 0 | 0 | 0 | 1 | 1 | 1 |
+|---|---|---|---|---|---|---|
+| y | 3 | 4 | 5 | 6 | 7 | 8 |
+
+| Method | R | Key value | t | p |
+|---|---|---|---|---|
+| Independent t-test (equal variances) | `t.test(y ~ g, var.equal = TRUE)` | mean difference = 3 | 3.674 | .021 |
+| Regression on a 0/1 variable | `lm(y ~ g)` | slope = 3 | 3.674 | .021 |
+| Correlation (point-biserial) | `cor.test(y, g)` | r = .878 | 3.674 | .021 |
+| One-way ANOVA | `aov(y ~ factor(g))` | F = 13.5 = t² | | .021 |
+
+## Which Chapter
+
+| Question | Classic name | Model | Chapter |
+|---|---|---|---|
+| Do two groups differ in their means? | Independent t-test | `lm(y ~ group)` | [Comparing Means](comparing-means.qmd) |
+| Did scores change from pre to post? | Paired t-test | `lm(post - pre ~ 1)` | [Comparing Means](comparing-means.qmd) |
+| Do three or more groups differ? | One-way ANOVA | `lm(y ~ factor(group))` | [Comparing Means](comparing-means.qmd) |
+| How strongly are two continuous variables related? | Correlation | `lm(scale(y) ~ scale(x))` | [Correlation and Regression](correlation-and-regression.qmd) |
+| How do several predictors relate to an outcome? | Multiple regression | `lm(y ~ x1 + x2)` | [Correlation and Regression](correlation-and-regression.qmd) |
+| The outcome is binary, ordinal, or a count | Logistic, ordinal, Poisson regression | `glm(y ~ x, family = binomial)` | [Generalized Linear Model](generalized-linear-model.qmd) |

@@ -65,22 +65,24 @@ Topics without a link are planned. The advanced ones, such as regularized regres
     - Outliers
 - Questionnaires or cross-sectional research:
     - Reverse items, sum, average
+- [Descriptive statistics](descriptive-statistics.qmd): M, SD, frequency, odds
 
-### Statistical Tests and Regression
+### Linear Models
 
-- [Descriptive statistics](fundamental-statistics.qmd#descriptive-statistics): M, SD, frequency, odds
+- [Overview: t-tests, ANOVA, correlation, and regression as one model](linear-models.qmd)
 - Assumption checks
     - Normality testing: univariate and multivariate normality tests
     - Homogeneity of variance
     - Residual diagnostics
-- [Basic statistics](fundamental-statistics.qmd#statistical-inference):
+- Basic statistics:
+    - [Comparing means: t-tests and ANOVA](comparing-means.qmd)
+        - Within-subject designs: paired t-test, repeated-measures ANOVA (sphericity)
+        - Post hoc tests and multiple comparisons
     - [Correlation and linear regression](correlation-and-regression.qmd)
         - Correlation (Pearson, Spearman)
         - Simple linear regression
         - Multiple linear regression, multicollinearity test (VIF)
-    - t-test, ANOVA (linear regression), chi-square test, etc.
-        - Within-subject designs: paired t-test, repeated-measures ANOVA (sphericity)
-        - Post hoc tests and multiple comparisons
+    - Chi-square test
     - Under the hood: the general linear model in matrix form (t-test, ANOVA, and regression as special cases)
     - Nonparametric tests: overview and lookup table
         - Under the hood: rank-based tests as linear models on ranks

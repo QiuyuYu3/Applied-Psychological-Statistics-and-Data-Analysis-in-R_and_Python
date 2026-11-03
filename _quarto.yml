@@ -22,9 +22,10 @@ book:
       chapters:
         - data-cleaning.qmd
         - missing-values.qmd
-    - part: "Statistical Tests and Regression"
+        - descriptive-statistics.qmd
+    - part: linear-models.qmd
       chapters:
-        - fundamental-statistics.qmd
+        - comparing-means.qmd
         - correlation-and-regression.qmd
         - generalized-linear-model.qmd
     - part: "Reporting and Visualization"

@@ -26,13 +26,15 @@ The manual is not finished. Linked chapters are online; the others are planned.
 
 - [Data Cleaning](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/data-cleaning.html): recoding, scale scores, summaries by group, normality checks
 - [Missing Values](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/missing-values.html): describing missingness and multiple imputation with mice
+- [Descriptive Statistics](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/descriptive-statistics.html): summary tables
 
-### Statistical Tests and Regression
+### Linear Models
 
-- [Fundamental Statistics](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/fundamental-statistics.html): summary tables and group comparisons
+- [Linear Models](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/linear-models.html): t-tests, ANOVA, correlation, and regression as one model, and which chapter covers which question
+- [Comparing Means](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/comparing-means.html): group comparison tables (t-tests and ANOVA not written yet)
 - [Correlation and Regression](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/correlation-and-regression.html): correlation tables (regression not written yet)
 - [Generalized Linear Model](https://qiuyuyu3.github.io/Applied-Psychological-Statistics-and-Data-Analysis-in-R_and_Python/generalized-linear-model.html): logistic regression; ordinal and count models planned
-- Planned: assumption checks, t-tests and ANOVA (including within-subject designs and post hoc tests), chi-square tests, nonparametric tests, effect sizes and confidence intervals, power analysis, MANOVA, multilevel modeling, regularized regression and cross-validation (with Python)
+- Planned: assumption checks, within-subject designs and post hoc tests, chi-square tests, nonparametric tests, effect sizes and confidence intervals, power analysis, MANOVA, multilevel modeling, regularized regression and cross-validation (with Python)
 
 ### Reporting and Visualization
 
